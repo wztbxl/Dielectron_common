@@ -1,4 +1,4 @@
-OBJS = miniDst.o analysis.o
+OBJS = miniDst.o  Param.o CentralityMaker.o StRefMultCorr.o analysis.o
 EXE =  analysis
 
 #OBJS = MuDst.o createphiwgt.o

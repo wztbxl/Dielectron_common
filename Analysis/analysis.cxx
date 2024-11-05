@@ -39,8 +39,9 @@
 #include "miniDst.h"
 #include "cuts.h"
 #include "RefMfun.h"
+#include "CentralityMaker.h"
 #include "StRefMultCorr.h"
-#include "pileup.h"
+// #include "pileup.h"
 
 using namespace std;
 #endif
@@ -85,6 +86,9 @@ map<Int_t,Int_t> mTotalDayId;
 map<Int_t,Int_t> mTotalRunId;
 map<Int_t,Int_t> mBadRunId_001;
 map<Int_t,Int_t> mBadRunId_021;
+vector <Int_t> TriggerID;
+vector <Double_t>FlatEP_Par;
+TString Energy;
 
 Float_t bField;
 Float_t reWeight;
@@ -137,6 +141,13 @@ TLorentzVector buffer_eMinus[mCenBins][mVzBins][mEveBins][mMaxEventsInBuffer][mM
 int buffer_ePlus_CellID[mCenBins][mVzBins][mEveBins][mMaxEventsInBuffer][mMaxElectrons];
 int buffer_eMinus_CellID[mCenBins][mVzBins][mEveBins][mMaxEventsInBuffer][mMaxElectrons];
 
+Float_t shiftCorrcos[mArrayLength];
+Float_t shiftCorrsin[mArrayLength];
+Float_t shiftCorrcos_east[mArrayLength];
+Float_t shiftCorrsin_east[mArrayLength];
+Float_t shiftCorrcos_west[mArrayLength];
+Float_t shiftCorrsin_west[mArrayLength];
+
 //***** constrain the bad dedx calibration geometry *****
 TF1 *funPosHi;
 TF1 *funPosLow;
@@ -167,6 +178,12 @@ TProfile2D *etaminuszminusQy;
 
 TProfile *ShiftFactorcos_cent[mArrayLength];
 TProfile *ShiftFactorsin_cent[mArrayLength];
+TProfile *ShiftFactorcos_cent_east[mArrayLength];
+TProfile *ShiftFactorsin_cent_east[mArrayLength];
+TProfile *ShiftFactorcos_cent_west[mArrayLength];
+TProfile *ShiftFactorsin_cent_west[mArrayLength];
+TProfile *ShiftFactorcos_cent_rejectE[mArrayLength];
+TProfile *ShiftFactorsin_cent_rejectE[mArrayLength];
 TProfile *etaplusQx_cent;
 TProfile *etaminusQx_cent;
 TProfile *etaplusQy_cent;
@@ -207,12 +224,12 @@ TH1D* hLargeDiffEvt_Day;
 TH1D* hLargeDiffEvt_vz;
 TH1D* hLargeDiffEvt_vr;
 TProfile *EventPlanRes;
-TH3F *hQXvsQYvsRunIndex;
-TH3F *hQXvsQYvsRunIndex_rawcenter_west;
-TH3F *hQXvsQYvsRunIndex_rawcenter_east;
-TH3F *hQXvsQYvsRunIndex_recenter_west;
-TH3F *hQXvsQYvsRunIndex_recenter_east;
-TH3F *hQXvsQYvsRunIndex_raw;
+// TH3F *hQXvsQYvsRunIndex;
+// TH3F *hQXvsQYvsRunIndex_rawcenter_west;
+// TH3F *hQXvsQYvsRunIndex_rawcenter_east;
+// TH3F *hQXvsQYvsRunIndex_recenter_west;
+// TH3F *hQXvsQYvsRunIndex_recenter_east;
+// TH3F *hQXvsQYvsRunIndex_raw;
 
 TH2F *hInclusiveEPhivsPt;
 TH2F *hExclusiveEPhivsPt;
@@ -369,13 +386,14 @@ Double_t finalEventPlane;
 
 int main(int argc, char** argv)
 {
-	if(argc!=1&&argc!=3) return -1;
+	if(argc!=1&&argc!=4) return -1;
 
 	TString inFile="test.list";
 	char outFile[1024];
 	sprintf(outFile,"test/test");
-	if(argc==3){
+	if(argc==4){
 		inFile = argv[1];
+		Energy = argv[3];
 		sprintf(outFile,"%s",argv[2]);
 	}
 
@@ -487,7 +505,7 @@ int main(int argc, char** argv)
 		current_nEPlus=0;
 		current_nEMinus=0;
 		Int_t npTrks = event->mNTrks;
-		nPi_K_P_tof = event->mnChargeParticle;
+		// nPi_K_P_tof = event->mnChargeParticle;
 		if(mDebug) cout << "npTrks = " << npTrks << endl;
 		// nPi_K_P_tof = 0;
 		for(int j=0;j<npTrks;j++) passTrack(event,j); //Trk loop
@@ -503,7 +521,8 @@ int main(int argc, char** argv)
 
 		// finalEventPlane = reCalEventPlane(event);//do not reject the electron contribution
 		// finalEventPlane = reCalEventPlane(event, kTRUE);//reject the electron contribution
-		finalEventPlane = reCalEventPlane_Zhen(event,kFALSE);
+		finalEventPlane = reCalEventPlane_Zhen(event,kTRUE);
+		// finalEventPlane = reCalEventPlane_Zhen(event,kFALSE);
 		if(mDebug) cout << "after recal Event Plane" << endl;
 		if(finalEventPlane<0) continue;
 		eveBufferPointer = (Int_t)(finalEventPlane/TMath::Pi()*mEveBins);
@@ -582,30 +601,31 @@ Bool_t passEvent(miniDst* event)
 	bool RefMVzCorFlag = kFALSE;
 	Bool_t is001Trigger = kFALSE;
 	Bool_t is021Trigger = kFALSE;
+
 	for(int i=0; i< nTrigs; i++){
 		int trigId = event->mTrigId[i];
-		if(trigId == mTrigId[0] || trigId == mTrigId[2]){
-			fireTrigger = kTRUE;
-		}
-		if(trigId == mTrigId[0])RefMVzCorFlag = kTRUE, is001Trigger = kTRUE;
-		if(trigId == mTrigId[2])is021Trigger = kTRUE;
+		auto it = std::find(TriggerID.begin(), TriggerID.end(), trigId);
+		if (it != TriggerID.end()) {
+    	    fireTrigger = kTRUE;
+    	} 
 		hTriggerID->Fill(trigId);
 	}
+
 	if(!fireTrigger) return kFALSE;
 	bField = event->mBField;
 	// mCentrality = event->mCentrality;
 
-	map<Int_t, Int_t>::iterator iter_001 = mBadRunId_001.find(runId);
-	if(iter_001 != mBadRunId_001.end() && is001Trigger){
-		if(mDebug) cout<<"bad run, continue"<<endl;
-		return kFALSE;
-	}
+	// map<Int_t, Int_t>::iterator iter_001 = mBadRunId_001.find(runId);
+	// if(iter_001 != mBadRunId_001.end() && is001Trigger){
+	// 	if(mDebug) cout<<"bad run, continue"<<endl;
+	// 	return kFALSE;
+	// }
 
-	map<Int_t, Int_t>::iterator iter_021 = mBadRunId_001.find(runId);
-	if(iter_021 != mBadRunId_001.end() && is021Trigger){ // using same bad runlist for the test
-		if(mDebug) cout<<"bad run, continue"<<endl;
-		return kFALSE;
-	}
+	// map<Int_t, Int_t>::iterator iter_021 = mBadRunId_001.find(runId);
+	// if(iter_021 != mBadRunId_001.end() && is021Trigger){ // using same bad runlist for the test
+	// 	if(mDebug) cout<<"bad run, continue"<<endl;
+	// 	return kFALSE;
+	// }
 
 	hnEvts->Fill(1);
 	hRunID->Fill(runId);
@@ -614,14 +634,37 @@ Bool_t passEvent(miniDst* event)
 	mCentrality = (int)event->mCentrality;
 	if(mDebug) cout << "mCentrality = " << mCentrality <<endl;
   // mCentrality = mCentrality+1;
-  cenBufferPointer = mCentrality;
-  RefMultCorr = event->mGRefMultCorr;
-  reWeight = event->mEvtWeight;
+//   cenBufferPointer = mCentrality;
+//   RefMultCorr = event->mGRefMultCorr;
+//   reWeight = event->mEvtWeight;
+
+//for  the official centrality defination
+	StRefMultCorr* mRefMultCorr = CentralityMaker::instance()->getRefMultCorr();
+	// cout << "after refMultCorr defination" << endl;
+	//using offical badrun list
+	mRefMultCorr->init((Int_t)runId);
+	// cout << "after refMultCorr init" << endl;
+	mRefMultCorr->initEvent(refMult,vz,ZDCrate);
+	// cout << "after refMultCorr initEvent" << endl;
+	if (mRefMultCorr->isBadRun(runId))
+	{
+		return kFALSE;
+	}
+	// cout << "after refMultCorr isBadRun" << endl;
+	RefMultCorr  = mRefMultCorr->getRefMultCorr();
+	// cout << "after refMultCorr getRefMultCorr " << endl;
+	reWeight  = mRefMultCorr->getWeight();
+	// cout << reWeight << endl;
+	// cout << "after refMultCorr getWeight" << endl;
+	mCentrality = mRefMultCorr->getCentralityBin9();//9 Centrality bin
+	// cout << "after refMultCorr getCentralityBin9" << endl;
+	//offical pile up pileupRejection
+	if  ( mRefMultCorr->isPileUpEvent(refMult,mnTOFMatch,vz ) ) return kFALSE;
 
   // if(RefMVzCorFlag)RefMultCorr = GetRefMultCorr(refMult, vz);
 	// reWeight = GetWeight(RefMultCorr);
 	// mCentrality = GetCentrality(RefMultCorr);
-	cenBufferPointer = mCentrality-1;
+	cenBufferPointer = mCentrality;
 	if (cenBufferPointer <0 || cenBufferPointer >8) return kFALSE;// 0-8 for 70-80% - 0-5%
 	if (mDebug) cout << "cenBufferPointer = " << cenBufferPointer << endl;
 	
@@ -639,7 +682,7 @@ Bool_t passEvent(miniDst* event)
 
 	hnTofHitsvsRefMult_noCut->Fill(refMult,mnTOFMatch);
 	if(TMath::Abs(vx)<1.e-5 && TMath::Abs(vy)<1.e-5 && TMath::Abs(vz)<1.e-5) return kFALSE;
-	if(!pileupRejection(vz, refMult, mnTOFMatch)) return kFALSE;
+	// if(!pileupRejection(vz, refMult, mnTOFMatch)) return kFALSE; // my version from pileup.h
 	hnEvts->Fill(5);
 	if(TMath::Abs(vz)>=mVzCut) return kFALSE;//vz should also be in the range listed in the parameters file to do the refMult correction
 	hnEvts->Fill(2);
@@ -664,7 +707,9 @@ Bool_t passEvent(miniDst* event)
 	
 
 	Int_t centrality9 = mCentrality;
-	hCentrality9->Fill(centrality9,reWeight);
+	// hCentrality9->Fill(mCentrality);
+	hCentrality9->Fill(mCentrality,reWeight);
+	//hCentrality9->Fill(centrality9,reWeight);
 
 	vzBufferPointer = (Int_t)((vz+mVzCut)/(2*mVzCut)*mVzBins);
 	if(vzBufferPointer<0 || vzBufferPointer>=mVzBins) return kFALSE;
@@ -887,7 +932,7 @@ void makeRealPairs()
 					double phi = pair.Phi();
 					if(phi < 0) phi = phi+TMath::Pi();
 					deltaphi = phi -finalEventPlane;
-					// if(deltaphi < -TMath::Pi()) deltaphi = deltaphi+2*-TMath::Pi();
+					if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
 					hMassvsDelta_Phi_Psi2_ULS[cenBufferPointer]->Fill(deltaphi,pair.M());
 					hMassvsCosDelta_Phi_Psi2_ULS[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 					hpTvsDelta_Phi_Psi2_ULS[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -956,7 +1001,7 @@ void makeRealPairs()
 					double phi = pair.Phi();
 					if(phi < 0) phi = phi+TMath::Pi();
 					deltaphi = phi -finalEventPlane;
-					// if(deltaphi < -TMath::Pi()) deltaphi = deltaphi+2*-TMath::Pi();
+					if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
 					hMassvsDelta_Phi_Psi2_LSPos[cenBufferPointer]->Fill(deltaphi,pair.M());
 					hMassvsCosDelta_Phi_Psi2_LSPos[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 					hpTvsDelta_Phi_Psi2_LSPos[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1023,7 +1068,7 @@ void makeRealPairs()
 					double phi = pair.Phi();
 					if(phi < 0) phi = phi+TMath::Pi();
 					deltaphi = phi -finalEventPlane;
-					// if(deltaphi < -TMath::Pi()) deltaphi = deltaphi+2*-TMath::Pi();
+					if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
 					hMassvsDelta_Phi_Psi2_LSNeg[cenBufferPointer]->Fill(deltaphi,pair.M());
 					hMassvsCosDelta_Phi_Psi2_LSNeg[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 					hpTvsDelta_Phi_Psi2_LSNeg[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1083,7 +1128,7 @@ void makeMixPairs()
 							double phi = pair.Phi();
 							if(phi < 0) phi = phi+TMath::Pi();
 							deltaphi = phi -finalEventPlane;
-							// if(deltaphi < -TMath::Pi()) deltaphi = deltaphi+2*-TMath::Pi();
+							if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
 							hMassvsDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(deltaphi,pair.M());
 							hMassvsCosDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 							hpTvsDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1136,7 +1181,7 @@ void makeMixPairs()
 							double phi = pair.Phi();
 							if(phi < 0) phi = phi+TMath::Pi();
 							deltaphi = phi -finalEventPlane;
-							// if(deltaphi < -TMath::Pi()) deltaphi = deltaphi+2*-TMath::Pi();
+							if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
 							hMassvsDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(deltaphi,pair.M());
 							hMassvsCosDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 							hpTvsDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1192,7 +1237,7 @@ void makeMixPairs()
 						double phi = pair.Phi();
 						if(phi < 0) phi = phi+TMath::Pi();
 						deltaphi = phi -finalEventPlane;
-						// if(deltaphi < -TMath::Pi()) deltaphi = deltaphi+2*-TMath::Pi();
+						if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
 						hMassvsDelta_Phi_Psi2_Mix_LSPos[cenBufferPointer]->Fill(deltaphi,pair.M());
 						hMassvsCosDelta_Phi_Psi2_Mix_LSPos[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 						hpTvsDelta_Phi_Psi2_Mix_LSPos[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1246,7 +1291,7 @@ void makeMixPairs()
 						double phi = pair.Phi();
 						if(phi < 0) phi = phi+TMath::Pi();
 						deltaphi = phi -finalEventPlane;
-						// if(deltaphi < -TMath::Pi()) deltaphi = deltaphi+2*-TMath::Pi();
+						if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
 						hMassvsDelta_Phi_Psi2_Mix_LSNeg[cenBufferPointer]->Fill(deltaphi,pair.M());
 						hMassvsCosDelta_Phi_Psi2_Mix_LSNeg[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 						hpTvsDelta_Phi_Psi2_Mix_LSNeg[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1409,52 +1454,52 @@ Double_t reCalEventPlane(miniDst* event, Bool_t rejElectron)
 	if(eventPlane<0.) return eventPlane;
 
 	if(mDebug) cout << "before recenter" << endl;
-	hQXvsQYvsRunIndex_raw->Fill(Qx,Qy,mCentrality);
+	// hQXvsQYvsRunIndex_raw->Fill(Qx,Qy,mCentrality);
 	//********* get recenter number and recenter *********
 	Double_t mReCenterQx, mReCenterQy;
 	Double_t mReCenterQxEast, mReCenterQyEast;
 	Double_t mReCenterQxWest, mReCenterQyWest;
 	if(vz>0){
-		// mReCenterQx = Qx - etapluszplusQx->GetBinContent(runIndex+1, mCentrality) - etaminuszplusQx->GetBinContent(runIndex+1, mCentrality);
-		// mReCenterQy = Qy - etapluszplusQy->GetBinContent(runIndex+1, mCentrality) - etaminuszplusQy->GetBinContent(runIndex+1, mCentrality);
-		// mReCenterQx = (mPlusQx-etapluszplusQx->GetBinContent(runIndex+1, mCentrality)) + (mMinusQx - etaminuszplusQx->GetBinContent(runIndex+1, mCentrality));
-		// mReCenterQy = (mPlusQy-etapluszplusQy->GetBinContent(runIndex+1, mCentrality)) + (mMinusQy - etaminuszplusQy->GetBinContent(runIndex+1, mCentrality));
+		mReCenterQx = Qx - etapluszplusQx->GetBinContent(runIndex+1, mCentrality) - etaminuszplusQx->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQy = Qy - etapluszplusQy->GetBinContent(runIndex+1, mCentrality) - etaminuszplusQy->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQx = (mPlusQx-etapluszplusQx->GetBinContent(runIndex+1, mCentrality)) + (mMinusQx - etaminuszplusQx->GetBinContent(runIndex+1, mCentrality));
+		mReCenterQy = (mPlusQy-etapluszplusQy->GetBinContent(runIndex+1, mCentrality)) + (mMinusQy - etaminuszplusQy->GetBinContent(runIndex+1, mCentrality));
 
-		// mReCenterQxEast = mMinusQx - etaminuszplusQx->GetBinContent(runIndex+1, mCentrality);
-		// mReCenterQyEast = mMinusQy - etaminuszplusQy->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQxEast = mMinusQx - etaminuszplusQx->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQyEast = mMinusQy - etaminuszplusQy->GetBinContent(runIndex+1, mCentrality);
+ 
+		mReCenterQxWest = mPlusQx - etapluszplusQx->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQyWest = mPlusQy - etapluszplusQy->GetBinContent(runIndex+1, mCentrality);
 
-		// mReCenterQxWest = mPlusQx - etapluszplusQx->GetBinContent(runIndex+1, mCentrality);
-		// mReCenterQyWest = mPlusQy - etapluszplusQy->GetBinContent(runIndex+1, mCentrality);
-
-		mReCenterQx = (mPlusQx-etaplusQx_cent->GetBinContent(mCentrality)) + (mMinusQx - etaminusQx_cent->GetBinContent(mCentrality));
-		mReCenterQy = (mPlusQy-etaplusQy_cent->GetBinContent( mCentrality)) + (mMinusQy - etaminusQy_cent->GetBinContent( mCentrality));
-
-		mReCenterQxEast = mMinusQx - etaminusQx_cent->GetBinContent(mCentrality);
-		mReCenterQyEast = mMinusQy - etaminusQy_cent->GetBinContent( mCentrality);
-
-		mReCenterQxWest = mPlusQx - etaplusQx_cent->GetBinContent(mCentrality);
-		mReCenterQyWest = mPlusQy - etaminusQx_cent->GetBinContent(mCentrality);
+		// mReCenterQx = (mPlusQx-etaplusQx_cent->GetBinContent(mCentrality)) + (mMinusQx - etaminusQx_cent->GetBinContent(mCentrality));
+		// // mReCenterQy = (mPlusQy-etaplusQy_cent->GetBinContent( mCentrality)) + (mMinusQy - etaminusQy_cent->GetBinContent( mCentrality));
+// 
+		// mReCenterQxEast = mMinusQx - etaminusQx_cent->GetBinContent(mCentrality);
+		// mReCenterQyEast = mMinusQy - etaminusQy_cent->GetBinContent( mCentrality);
+// 
+		// mReCenterQxWest = mPlusQx - etaplusQx_cent->GetBinContent(mCentrality);
+		// mReCenterQyWest = mPlusQy - etaminusQx_cent->GetBinContent(mCentrality);
 	}
 	else{
-		// mReCenterQx = Qx - etapluszminusQx->GetBinContent(runIndex+1, mCentrality) - etaminuszminusQx->GetBinContent(runIndex+1, mCentrality);
-		// mReCenterQy = Qy - etapluszminusQy->GetBinContent(runIndex+1, mCentrality) - etaminuszminusQy->GetBinContent(runIndex+1, mCentrality);
-		// mReCenterQx = (mPlusQx-etapluszminusQx->GetBinContent(runIndex+1, mCentrality)) + (mMinusQx - etaminuszminusQx->GetBinContent(runIndex+1, mCentrality));
-		// mReCenterQy = (mPlusQy-etapluszminusQy->GetBinContent(runIndex+1, mCentrality)) + (mMinusQy - etaminuszminusQy->GetBinContent(runIndex+1, mCentrality));
+		mReCenterQx = Qx - etapluszminusQx->GetBinContent(runIndex+1, mCentrality) - etaminuszminusQx->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQy = Qy - etapluszminusQy->GetBinContent(runIndex+1, mCentrality) - etaminuszminusQy->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQx = (mPlusQx-etapluszminusQx->GetBinContent(runIndex+1, mCentrality)) + (mMinusQx - etaminuszminusQx->GetBinContent(runIndex+1, mCentrality));
+		mReCenterQy = (mPlusQy-etapluszminusQy->GetBinContent(runIndex+1, mCentrality)) + (mMinusQy - etaminuszminusQy->GetBinContent(runIndex+1, mCentrality));
 
-		// mReCenterQxEast = mMinusQx - etaminuszminusQx->GetBinContent(runIndex+1, mCentrality);
-		// mReCenterQyEast = mMinusQy - etaminuszminusQy->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQxEast = mMinusQx - etaminuszminusQx->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQyEast = mMinusQy - etaminuszminusQy->GetBinContent(runIndex+1, mCentrality);
 
-		// mReCenterQxWest = mPlusQx - etapluszminusQx->GetBinContent(runIndex+1, mCentrality);
-		// mReCenterQyWest = mPlusQy - etapluszminusQy->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQxWest = mPlusQx - etapluszminusQx->GetBinContent(runIndex+1, mCentrality);
+		mReCenterQyWest = mPlusQy - etapluszminusQy->GetBinContent(runIndex+1, mCentrality);
 
-		mReCenterQx = (mPlusQx-etaplusQx_cent->GetBinContent(mCentrality)) + (mMinusQx - etaminusQx_cent->GetBinContent(mCentrality));
-		mReCenterQy = (mPlusQy-etaplusQy_cent->GetBinContent(mCentrality)) + (mMinusQy - etaminusQy_cent->GetBinContent(mCentrality));
+		// mReCenterQx = (mPlusQx-etaplusQx_cent->GetBinContent(mCentrality)) + (mMinusQx - etaminusQx_cent->GetBinContent(mCentrality));
+		// mReCenterQy = (mPlusQy-etaplusQy_cent->GetBinContent(mCentrality)) + (mMinusQy - etaminusQy_cent->GetBinContent(mCentrality));
 
-		mReCenterQxEast = mMinusQx - etaminusQx_cent->GetBinContent(runIndex+1, mCentrality);
-		mReCenterQyEast = mMinusQy - etaminusQy_cent->GetBinContent(runIndex+1, mCentrality);
+		// mReCenterQxEast = mMinusQx - etaminusQx_cent->GetBinContent(runIndex+1, mCentrality);
+		// mReCenterQyEast = mMinusQy - etaminusQy_cent->GetBinContent(runIndex+1, mCentrality);
 
-		mReCenterQxWest = mPlusQx - etaplusQx_cent->GetBinContent(runIndex+1, mCentrality);
-		mReCenterQyWest = mPlusQy - etaplusQy_cent->GetBinContent(runIndex+1, mCentrality);
+		// mReCenterQxWest = mPlusQx - etaplusQx_cent->GetBinContent(runIndex+1, mCentrality);
+		// mReCenterQyWest = mPlusQy - etaplusQy_cent->GetBinContent(runIndex+1, mCentrality);
 	}
 	if(mDebug) cout << "before cal recentred EP" << endl;
 
@@ -1483,9 +1528,9 @@ Double_t reCalEventPlane(miniDst* event, Bool_t rejElectron)
 		hReCenterEventPlaneEast->Fill(recenterEPEast);
 	}
 	recenterEP_noFlat = recenterEP;
-	hQXvsQYvsRunIndex->Fill(mReCenterQx,mReCenterQy,mCentrality);
-	hQXvsQYvsRunIndex_recenter_west->Fill(mReCenterQxWest,mReCenterQyWest,mCentrality);
-	hQXvsQYvsRunIndex_recenter_east->Fill(mReCenterQxEast,mReCenterQyEast,mCentrality);
+	// hQXvsQYvsRunIndex->Fill(mReCenterQx,mReCenterQy,mCentrality);
+	// hQXvsQYvsRunIndex_recenter_west->Fill(mReCenterQxWest,mReCenterQyWest,mCentrality);
+	// hQXvsQYvsRunIndex_recenter_east->Fill(mReCenterQxEast,mReCenterQyEast,mCentrality);
 
 	//for now just using the flat event plane to do the calculation
 	hEventPlaneWestvsEast->Fill(recenterEPEast,recenterEPWest);
@@ -1558,12 +1603,17 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	Int_t mEtaMinusNTrks = event->mEtaMinusNTrks;
 	Float_t mEtaPlusPtWeight = event->mEtaPlusPtWeight;
 	Float_t mEtaMinusPtWeight = event->mEtaMinusPtWeight;
-	int centrality = event->mCentrality;
+	int centrality = mCentrality;
+	// int centrality = event->mCentrality;
 
 	//get Q vector
-	Float_t Qx = mPlusQx/mEtaPlusPtWeight - mMinusQx/mEtaMinusPtWeight; 
-	Float_t Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
+	// Float_t Qx = mPlusQx/mEtaPlusPtWeight - mMinusQx/mEtaMinusPtWeight; 
+	// Float_t Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
+	Float_t Qx = mPlusQx + mMinusQx; 
+	Float_t Qy = mPlusQy + mMinusQy;
+	
 	int dayIndex = -99;
+
 	map<Int_t,Int_t>::iterator iter = mTotalDayId.find((runId/1000)%1000);
 		if(iter != mTotalDayId.end())
 			dayIndex = iter->second;
@@ -1600,62 +1650,123 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 		}
 	}
 	//recalculate the Qx Qy with electron rejection
-	Qx = mPlusQx/mEtaPlusPtWeight - mMinusQx/mEtaMinusPtWeight; 
-	Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
+	// Qx = mPlusQx/mEtaPlusPtWeight - mMinusQx/mEtaMinusPtWeight; 
+	// Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
+	Qx = mPlusQx + mMinusQx; 
+	Qy = mPlusQy + mMinusQy;
 	double eventPlane_rejectE =  0.5*TMath::ATan2(Qy,Qx);
 	if (eventPlane_rejectE < 0.) eventPlane_rejectE += TMath::Pi();
 	hNewEventPlane->Fill(eventPlane_rejectE);
-	hQXvsQYvsRunIndex_raw->Fill(Qx,Qy,mCentrality);
-	hQXvsQYvsRunIndex_rawcenter_west->Fill(mPlusQx/mEtaPlusPtWeight,mPlusQy/mEtaPlusPtWeight,centrality);
-	hQXvsQYvsRunIndex_rawcenter_east->Fill(mMinusQx/mEtaMinusPtWeight,mMinusQy/mEtaMinusPtWeight,centrality);
+	// hQXvsQYvsRunIndex_raw->Fill(Qx,Qy,mCentrality);
+	// hQXvsQYvsRunIndex_rawcenter_west->Fill(mPlusQx/mEtaPlusPtWeight,mPlusQy/mEtaPlusPtWeight,centrality);
+	// hQXvsQYvsRunIndex_rawcenter_east->Fill(mMinusQx/mEtaMinusPtWeight,mMinusQy/mEtaMinusPtWeight,centrality);
 
 	//Do the recenter
-	mPlusQx = mPlusQx/mEtaPlusPtWeight-etaplusQx_cent->GetBinContent(centrality);
-	mPlusQy = mPlusQy/mEtaPlusPtWeight-etaplusQy_cent->GetBinContent(centrality);
-	mMinusQx = mMinusQx/mEtaMinusPtWeight-etaminusQx_cent->GetBinContent(centrality);
-	mMinusQy = mMinusQy/mEtaMinusPtWeight-etaminusQy_cent->GetBinContent(centrality);
+	// mPlusQx = mPlusQx/mEtaPlusPtWeight-etaplusQx_cent->GetBinContent(centrality);
+	// mPlusQy = mPlusQy/mEtaPlusPtWeight-etaplusQy_cent->GetBinContent(centrality);
+	// mMinusQx = mMinusQx/mEtaMinusPtWeight-etaminusQx_cent->GetBinContent(centrality);
+	// mMinusQy = mMinusQy/mEtaMinusPtWeight-etaminusQy_cent->GetBinContent(centrality);
 
 	//recalculate the Qx and Qy with recenter
 	// Qx = mPlusQx/mEtaPlusPtWeight - mMinusQx/mEtaMinusPtWeight; 
 	// Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
-	Qx = mPlusQx - mMinusQx; 
-	Qy = mPlusQy - mMinusQy;
+	// Qx = mPlusQx - mMinusQx; 
+	// Qy = mPlusQy - mMinusQy;
 	Double_t mReCenterQxEast, mReCenterQyEast;
 	Double_t mReCenterQxWest, mReCenterQyWest;
 	// mReCenterQxEast = 
-	hQXvsQYvsRunIndex_recenter_west->Fill(mPlusQx,mPlusQy,centrality);
-	hQXvsQYvsRunIndex_recenter_east->Fill(mMinusQx,mMinusQy,centrality);
+	// hQXvsQYvsRunIndex_recenter_west->Fill(mPlusQx,mPlusQy,centrality);
+	// hQXvsQYvsRunIndex_recenter_east->Fill(mMinusQx,mMinusQy,centrality);
 
+	Double_t recenterEP;
+	Double_t recenterEPEast;
+	Double_t recenterEPWest;
+	TVector2 mReCenterQ(Qx, Qy);
+	TVector2 mReCenterQWest(mPlusQx, mPlusQy);
+    TVector2 mReCenterQEast(mMinusQx, mMinusQy);
+	if(mReCenterQ.Mod() > 0){
+		recenterEP = 0.5*mReCenterQ.Phi();
+		if(recenterEP<0.) recenterEP += TMath::Pi();
+		hReCenterEventPlane->Fill(recenterEP);
+	}
+	if(mReCenterQWest.Mod() > 0){
+		recenterEPWest = 0.5*mReCenterQWest.Phi();
+		if(recenterEPWest<0.) recenterEPWest += TMath::Pi();
+		hReCenterEventPlaneWest->Fill(recenterEPWest);
+	}
+	if(mReCenterQEast.Mod() > 0){
+		recenterEPEast = 0.5*mReCenterQEast.Phi();
+		if(recenterEPEast<0.) recenterEPEast += TMath::Pi();
+		hReCenterEventPlaneEast->Fill(recenterEPEast);
+	}
 	// Double_t recenterEP = 0.5*mRawQ.Phi();
-	Double_t recenterEP = 0.5*TMath::ATan2(Qy,Qx);
+	recenterEP = 0.5*TMath::ATan2(Qy,Qx);
 	if (recenterEP < 0.) recenterEP += TMath::Pi();
 	hReCenterEventPlane->Fill(recenterEP);
-	hQXvsQYvsRunIndex->Fill(Qx,Qy,mCentrality);
+	// hQXvsQYvsRunIndex->Fill(Qx,Qy,mCentrality);
+	Double_t shiftEP;
+	Double_t shiftEPEast;
+	Double_t shiftEPWest;
 
 	//*********  get shift factor and add shift deltaPhi *********
-	Float_t shiftCorrcos[mArrayLength];
-	Float_t shiftCorrsin[mArrayLength];
+	// Float_t shiftCorrcos[mArrayLength];
+	// Float_t shiftCorrsin[mArrayLength];
+	memset(shiftCorrcos,0,sizeof(shiftCorrcos));
+	memset(shiftCorrsin,0,sizeof(shiftCorrsin));
+	memset(shiftCorrcos_east,0,sizeof(shiftCorrcos_east));
+	memset(shiftCorrsin_east,0,sizeof(shiftCorrsin_east));
+	memset(shiftCorrcos_west,0,sizeof(shiftCorrcos_west));
+	memset(shiftCorrsin_west,0,sizeof(shiftCorrsin_west));
 	for(Int_t i=0;i<mArrayLength;i++){
 		// shiftCorrcos[i] = ShiftFactorcos[i]->GetBinContent(dayIndex+1,mCentrality);
 		// shiftCorrsin[i] = ShiftFactorsin[i]->GetBinContent(dayIndex+1,mCentrality);
 		shiftCorrcos[i] = ShiftFactorcos_cent[i]->GetBinContent(centrality);
 		shiftCorrsin[i] = ShiftFactorsin_cent[i]->GetBinContent(centrality);
+		shiftCorrcos_east[i] = ShiftFactorcos_cent_east[i]->GetBinContent(centrality+1);
+		shiftCorrsin_east[i] = ShiftFactorsin_cent_east[i]->GetBinContent(centrality+1);
+		shiftCorrcos_west[i] = ShiftFactorcos_cent_west[i]->GetBinContent(centrality+1);
+		shiftCorrsin_west[i] = ShiftFactorsin_cent_west[i]->GetBinContent(centrality+1);
 		// cout << "shiftCorrcos[" << i << "] = " << shiftCorrcos[i] << endl;
 		// cout << "shiftCorrsin[" << i << "] = " << shiftCorrsin[i] << endl;
 	}
 
 	Double_t deltaPhi=0;
 	for(Int_t i=0;i<mArrayLength;i++){
-		deltaPhi += 3./(i+1)*(-1.*shiftCorrsin[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos[i]*sin(2.*(i+1)*recenterEP));
-		// deltaPhi += 1./(i+1)*(-1.*shiftCorrsin[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos[i]*sin(2.*(i+1)*recenterEP));
+		// deltaPhi += 3./(i+1)*(-1.*shiftCorrsin[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos[i]*sin(2.*(i+1)*recenterEP));
+				deltaPhi += 1./(i+1)*(-1.*shiftCorrsin[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos[i]*sin(2.*(i+1)*recenterEP));
+
+	}
+	Double_t deltaPhi_east=0;
+	for(Int_t i=0;i<mArrayLength;i++){
+		deltaPhi_east += 1./(i+1)*(-1.*shiftCorrsin_east[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos_east[i]*sin(2.*(i+1)*recenterEP));
+	}
+	Double_t deltaPhi_west=0;
+	for(Int_t i=0;i<mArrayLength;i++){
+		// deltaPhi_east += 3./(i+1)*(-1.*shiftCorrsin[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos[i]*sin(2.*(i+1)*recenterEP));
+		deltaPhi_west += 1./(i+1)*(-1.*shiftCorrsin_west[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos_west[i]*sin(2.*(i+1)*recenterEP));
 	}
 	deltaPhi = deltaPhi/2.;
 	if(deltaPhi<0.) deltaPhi += TMath::Pi();
 	if(deltaPhi>=TMath::Pi()) deltaPhi -= TMath::Pi();
+	deltaPhi_east = deltaPhi_east/2.;//why divide by 2? indifination it should not be
+	if(deltaPhi_east<0.) deltaPhi_east += TMath::Pi();
+	if(deltaPhi_east>=TMath::Pi()) deltaPhi_east -= TMath::Pi();
+	deltaPhi_west = deltaPhi_west/2.;//why divide by 2? indifination it should not be
+	if(deltaPhi_west<0.) deltaPhi_west += TMath::Pi();
+	if(deltaPhi_west>=TMath::Pi()) deltaPhi_west -= TMath::Pi();
 	hDelta_Psi2_1D->Fill(deltaPhi);
 	double finalEP = recenterEP + deltaPhi;
 	if(finalEP<0.) finalEP += TMath::Pi();
 	if(finalEP>=TMath::Pi()) finalEP -= TMath::Pi();
+	double finalEP_east = recenterEPEast + deltaPhi_east;
+	if(finalEP_east<0.) finalEP_east += TMath::Pi();
+	if(finalEP_east>=TMath::Pi()) finalEP_east -= TMath::Pi();
+	double finalEP_west = recenterEPWest + deltaPhi_west;
+	if(finalEP_west<0.) finalEP_west += TMath::Pi();
+	if(finalEP_west>=TMath::Pi()) finalEP_west -= TMath::Pi();
+	// hDelta_Psi2->Fill(recenterEP,deltaPhi);
+	hEventPlaneWestvsEast->Fill(finalEP_east,finalEP_west);
+	EventPlanRes->Fill(mCentrality, cos(2*(finalEP_east-finalEP_west)));
 	// hDelta_Psi2->Fill(recenterEP,deltaPhi);
 
 	double deltaPhi_2 = Delta_Psi2->Eval(recenterEP);
@@ -1988,12 +2099,12 @@ void bookHistograms()
 	hLargeDiffEvt_vz = new TH1D("hLargeDiffEvt_vz","hLargeDiffEvt_vz;",1200,-60,60);
 	hLargeDiffEvt_vr = new TH1D("hLargeDiffEvt_vr","hLargeDiffEvt_vr;",500,0,5);
 	EventPlanRes = new TProfile("EventPlanRes","EventPlanRes",10,-0.5,9.5);
-	hQXvsQYvsRunIndex = new TH3F("hQXvsQYvsRunIndex","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
-	hQXvsQYvsRunIndex_raw = new TH3F("hQXvsQYvsRunIndex_raw","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
-	hQXvsQYvsRunIndex_rawcenter_west = new TH3F("hQXvsQYvsRunIndex_rawcenter_west","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
-	hQXvsQYvsRunIndex_rawcenter_east = new TH3F("hQXvsQYvsRunIndex_rawcenter_east","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
-	hQXvsQYvsRunIndex_recenter_west = new TH3F("hQXvsQYvsRunIndex_recenter_west","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
-	hQXvsQYvsRunIndex_recenter_east = new TH3F("hQXvsQYvsRunIndex_recenter_east","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
+	// hQXvsQYvsRunIndex = new TH3F("hQXvsQYvsRunIndex","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
+	// hQXvsQYvsRunIndex_raw = new TH3F("hQXvsQYvsRunIndex_raw","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
+	// hQXvsQYvsRunIndex_rawcenter_west = new TH3F("hQXvsQYvsRunIndex_rawcenter_west","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
+	// hQXvsQYvsRunIndex_rawcenter_east = new TH3F("hQXvsQYvsRunIndex_rawcenter_east","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
+	// hQXvsQYvsRunIndex_recenter_west = new TH3F("hQXvsQYvsRunIndex_recenter_west","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
+	// hQXvsQYvsRunIndex_recenter_east = new TH3F("hQXvsQYvsRunIndex_recenter_east","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
 	
 	//histograms for v2 calculation
 	for(int i = 0; i < mCenBins; i++)
@@ -2221,12 +2332,12 @@ void writeHistograms(char* outFile)
 	hLargeDiffEvt_Day->Write();
 	hLargeDiffEvt_vz->Write();
 	hLargeDiffEvt_vr->Write();
-	hQXvsQYvsRunIndex->Write();
-	hQXvsQYvsRunIndex_raw->Write();
-	hQXvsQYvsRunIndex_rawcenter_west->Write();
-	hQXvsQYvsRunIndex_rawcenter_east->Write();
-	hQXvsQYvsRunIndex_recenter_west->Write();
-	hQXvsQYvsRunIndex_recenter_east->Write();
+	// hQXvsQYvsRunIndex->Write();
+	// hQXvsQYvsRunIndex_raw->Write();
+	// hQXvsQYvsRunIndex_rawcenter_west->Write();
+	// hQXvsQYvsRunIndex_rawcenter_east->Write();
+	// hQXvsQYvsRunIndex_recenter_west->Write();
+	// hQXvsQYvsRunIndex_recenter_east->Write();
 	cout << "writing event plane done" << endl;
 	
 	hInclusiveEPhivsPt->Write();
@@ -2414,7 +2525,7 @@ Bool_t Init()
 
 	ifstream indata;
 
-	indata.open("/star/u/wangzhen/run20/Dielectron/DataQA/mTotalDayList.dat");
+	indata.open(From("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalDayList.dat",Energy.Data()));
 	mTotalDayId.clear();
 	if(indata.is_open()){
 		cout<<"read in day number list and recode day number ...";
@@ -2431,7 +2542,7 @@ Bool_t Init()
 	}
 	indata.close();
 
-	indata.open("/star/u/wangzhen/run20/Dielectron/DataQA/mTotalRunList.dat");
+	indata.open(From("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalRunList.dat",Energy.Data()));
 	mTotalRunId.clear();
 	if(indata.is_open()){
 		cout<<"read in total run number list and recode run number ...";
@@ -2449,9 +2560,25 @@ Bool_t Init()
 	}
 	indata.close();
 
+	indata.open(From("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/Flatting_Par_Fit.dat",Energy.Data()));
+	FlatEP_Par.clear();
+	if(indata.is_open()){
+		cout<<"read in the event plane flatting parameters ...";
+		Double_t par_tem;;
+		while(indata>>par_tem){
+			FlatEP_Par.push_back(par_tem);
+			cout << "flatting parameter is " << par_tem << endl;
+		}
+		cout<<" [OK]"<<endl;
+	}else{
+		cout<<"Failed to load the event plane flatting parameter !!!"<<endl;
+		return kFALSE;
+	}
+	indata.close();
+
 	//read in bad run for 580001 and 580021
 	ifstream indata_001;
-	indata_001.open("/star/u/wangzhen/run20/Dielectron/BadRunList/BadRunList.dat");
+	indata.open(From("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()));
 	mBadRunId_001.clear();
 	if(indata_001.is_open()){
 		cout<<"read in bad run list for 9.2 GeV Au+Au GeV ";
@@ -2468,6 +2595,26 @@ Bool_t Init()
 	}
 	indata_001.close();
 
+	cout << "loading the trigger ID" << endl;
+	ifstream in_triggerFile;
+	in_triggerFile.open(Form("./%s_triggerID.dat",Energy.Data());
+	TriggerID.clear();
+	if(in_triggerFile.is_open())
+	{
+		cout << "reading the " << Energy << " trigger IDs" << endl;
+		int in_triggerID;
+		while (in_triggerFile>>in_triggerID)
+		{
+			TriggerID.push_back(in_triggerID);
+		}
+		for(auto f:TriggerID)
+		{
+			cout << "Trigger ID" << f << endl;
+		}
+		cout << "loading trigger ID [OK]" << endl;
+	}
+	in_triggerFile.close();
+
 	PtAxis = new TAxis(mPtBins, mPairPtCut);
 	YAxis = new TAxis(mYBins, -1,1);
 	PhiAxis = new TAxis(mPhiBins, 0, 1);
@@ -2479,7 +2626,7 @@ Bool_t Init()
 		cout<<iter->second<<" \t"<<iter->first<<endl;
 
 
-	TFile *fReCenter = TFile::Open("/star/u/wangzhen/run20/Dielectron/FlatEvtPlane/reCenter/output_all/reCenter.root");
+	TFile *fReCenter = TFile::Open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/reCenter.root",Energy.Data()));
 	if(fReCenter->IsOpen()){
 		cout<<"read in re-center root file ...";
 		etapluszplusQx   = (TProfile2D *)fReCenter->Get("etapluszplusQx");
@@ -2496,7 +2643,7 @@ Bool_t Init()
 		etaminusQy_cent  = (TProfile*)fReCenter->Get("etaminusQy_cent");
 	}
 
-	TFile *fShift = TFile::Open("/star/u/wangzhen/run20/Dielectron/FlatEvtPlane/shift/output_all/shift.histo.root");
+	TFile *fShift = TFile::Open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/shift.histo.root",Energy.Data()));
 	if(fShift->IsOpen()){
 		cout<<"read in shiftfactor root file ...";
 		for(int i=0;i<mArrayLength;i++){
@@ -2504,6 +2651,10 @@ Bool_t Init()
 			ShiftFactorsin[i] = (TProfile2D*)fShift->Get(Form("shiftfactorsin_%d",i));
 			ShiftFactorcos_cent[i] = (TProfile*)fShift->Get(Form("shiftfactorcos_cent_%d",i));
 			ShiftFactorsin_cent[i] = (TProfile*)fShift->Get(Form("shiftfactorsin_cent_%d",i));
+			ShiftFactorcos_cent_east[i] = (TProfile*)fShift->Get(Form("shiftfactorcos_cent_%d",i));
+			ShiftFactorsin_cent_east[i] = (TProfile*)fShift->Get(Form("shiftfactorsin_cent_%d",i));
+			ShiftFactorcos_cent_west[i] = (TProfile*)fShift->Get(Form("shiftfactorcos_cent_%d",i));
+			ShiftFactorsin_cent_west[i] = (TProfile*)fShift->Get(Form("shiftfactorsin_cent_%d",i));
 
 		}
 		cout<<" [OK]"<<endl;
@@ -2517,7 +2668,7 @@ Bool_t Init()
 	PileupLowlimit->SetParameters(-6.33246e+00,7.90568e-02,3.03279e-02,-5.03738e-04,3.82206e-06,-1.30813e-08,1.64832e-11);
 	Delta_Psi2 = new TF1("Delta_Psi2","0.5*( 2*[0]*sin(2*x)-2*[1]*cos(2*x)+[3]*sin(4*x)-[2]*cos(4*x) )",-TMath::Pi(),TMath::Pi());
 	Delta_Psi2->SetParNames("<cos2#Psi_{2}>","<sin2#Psi_{2}>","<cos4#Psi_{2}>","<sin4#Psi_{2}>");
-	Delta_Psi2->SetParameters(0.00154607,0.00161089,-0.00401211,-0.00392446);
+	Delta_Psi2->SetParameters(FlatEP_Par);
 	// Delta_Psi2->SetParameters(0.001461,0.000840,0.002069,0.002289);
 	f_upper->SetParameters(6.32816,0.689232,-0.00185181,6.31563e-06,-8.29481e-09);
 	f_lower->SetParameters(-5.20165,0.144438,0.00186397,-1.28471e-05,4.28608e-08);
