@@ -1663,10 +1663,10 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	// hQXvsQYvsRunIndex_rawcenter_east->Fill(mMinusQx/mEtaMinusPtWeight,mMinusQy/mEtaMinusPtWeight,centrality);
 
 	//Do the recenter
-	// mPlusQx = mPlusQx/mEtaPlusPtWeight-etaplusQx_cent->GetBinContent(centrality);
-	// mPlusQy = mPlusQy/mEtaPlusPtWeight-etaplusQy_cent->GetBinContent(centrality);
-	// mMinusQx = mMinusQx/mEtaMinusPtWeight-etaminusQx_cent->GetBinContent(centrality);
-	// mMinusQy = mMinusQy/mEtaMinusPtWeight-etaminusQy_cent->GetBinContent(centrality);
+	mPlusQx = mPlusQx/mEtaPlusPtWeight-etaplusQx_cent->GetBinContent(centrality+1);
+	mPlusQy = mPlusQy/mEtaPlusPtWeight-etaplusQy_cent->GetBinContent(centrality+1);
+	mMinusQx = mMinusQx/mEtaMinusPtWeight-etaminusQx_cent->GetBinContent(centrality+1);
+	mMinusQy = mMinusQy/mEtaMinusPtWeight-etaminusQy_cent->GetBinContent(centrality+1);
 
 	//recalculate the Qx and Qy with recenter
 	// Qx = mPlusQx/mEtaPlusPtWeight - mMinusQx/mEtaMinusPtWeight; 
@@ -1721,8 +1721,8 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	for(Int_t i=0;i<mArrayLength;i++){
 		// shiftCorrcos[i] = ShiftFactorcos[i]->GetBinContent(dayIndex+1,mCentrality);
 		// shiftCorrsin[i] = ShiftFactorsin[i]->GetBinContent(dayIndex+1,mCentrality);
-		shiftCorrcos[i] = ShiftFactorcos_cent[i]->GetBinContent(centrality);
-		shiftCorrsin[i] = ShiftFactorsin_cent[i]->GetBinContent(centrality);
+		shiftCorrcos[i] = ShiftFactorcos_cent[i]->GetBinContent(centrality+1);
+		shiftCorrsin[i] = ShiftFactorsin_cent[i]->GetBinContent(centrality+1);
 		shiftCorrcos_east[i] = ShiftFactorcos_cent_east[i]->GetBinContent(centrality+1);
 		shiftCorrsin_east[i] = ShiftFactorsin_cent_east[i]->GetBinContent(centrality+1);
 		shiftCorrcos_west[i] = ShiftFactorcos_cent_west[i]->GetBinContent(centrality+1);
