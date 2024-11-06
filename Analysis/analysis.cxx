@@ -2618,6 +2618,9 @@ Bool_t Init()
 			cout << "Trigger ID" << f << endl;
 		}
 		cout << "loading trigger ID [OK]" << endl;
+	} else{
+		cout<<"Failed to load the Trigger ID !!!"<<endl;
+		return kFALSE;
 	}
 	in_triggerFile.close();
 
