@@ -2585,13 +2585,13 @@ Bool_t Init()
 	cout << "Loading the bad runlist from " << Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()) << endl;
 	ifstream indata_001;
 	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()));
-	mBadRunId_001.clear();
-	if(indata_001.is_open()){
+	indata.clear();
+	if(indata.is_open()){
 		cout<<"read in bad run list for 9.2 GeV Au+Au GeV ";
 		Int_t oldId;
 		Int_t newId=0;
-		while(indata_001>>oldId){
-			mBadRunId_001[oldId] = newId;
+		while(indata>>oldId){
+			indata[oldId] = newId;
 			newId++;
 		}
 		cout<<" [OK]"<<endl;
