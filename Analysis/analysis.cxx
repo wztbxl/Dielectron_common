@@ -2526,6 +2526,7 @@ Bool_t Init()
 
 	ifstream indata;
 
+	cout << "Loading the day list from " << Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalDayList.dat",Energy.Data()) << endl;
 	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalDayList.dat",Energy.Data()));
 	mTotalDayId.clear();
 	if(indata.is_open()){
@@ -2543,6 +2544,7 @@ Bool_t Init()
 	}
 	indata.close();
 
+	cout << "Loading the run list from " << Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalRunList.dat",Energy.Data()) << endl;
 	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalRunList.dat",Energy.Data()));
 	mTotalRunId.clear();
 	if(indata.is_open()){
