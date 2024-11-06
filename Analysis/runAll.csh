@@ -1,10 +1,11 @@
 #!/bin/bash
 date
 
-if [ $# -ne 2 ]; then
+if [ $# -ne 3 ]; then
      echo "Please input two arguement!"
      echo "arg1 for the datalist tag"
      echo "arg2 for the production tag"
+     echo "arg3 for the Energy"
 	 exit 1
 fi
 
