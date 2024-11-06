@@ -1663,16 +1663,18 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	// hQXvsQYvsRunIndex_rawcenter_east->Fill(mMinusQx/mEtaMinusPtWeight,mMinusQy/mEtaMinusPtWeight,centrality);
 
 	//Do the recenter
-	mPlusQx = mPlusQx/mEtaPlusPtWeight-etaplusQx_cent->GetBinContent(centrality+1);
-	mPlusQy = mPlusQy/mEtaPlusPtWeight-etaplusQy_cent->GetBinContent(centrality+1);
-	mMinusQx = mMinusQx/mEtaMinusPtWeight-etaminusQx_cent->GetBinContent(centrality+1);
-	mMinusQy = mMinusQy/mEtaMinusPtWeight-etaminusQy_cent->GetBinContent(centrality+1);
+	mPlusQx = mPlusQxt-etaplusQx_cent->GetBinContent(centrality+1);
+	mPlusQy = mPlusQyt-etaplusQy_cent->GetBinContent(centrality+1);
+	mMinusQx = mMinusQx-etaminusQx_cent->GetBinContent(centrality+1);
+	mMinusQy = mMinusQy-etaminusQy_cent->GetBinContent(centrality+1);
 
 	//recalculate the Qx and Qy with recenter
 	// Qx = mPlusQx/mEtaPlusPtWeight - mMinusQx/mEtaMinusPtWeight; 
 	// Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
 	// Qx = mPlusQx - mMinusQx; 
 	// Qy = mPlusQy - mMinusQy;
+	Qx = mPlusQx + mMinusQx; 
+	Qy = mPlusQy + mMinusQy;
 	Double_t mReCenterQxEast, mReCenterQyEast;
 	Double_t mReCenterQxWest, mReCenterQyWest;
 	// mReCenterQxEast = 
