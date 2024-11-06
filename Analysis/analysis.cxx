@@ -2525,7 +2525,7 @@ Bool_t Init()
 
 	ifstream indata;
 
-	indata.open(From("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalDayList.dat",Energy.Data()));
+	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalDayList.dat",Energy.Data()));
 	mTotalDayId.clear();
 	if(indata.is_open()){
 		cout<<"read in day number list and recode day number ...";
@@ -2597,7 +2597,7 @@ Bool_t Init()
 
 	cout << "loading the trigger ID" << endl;
 	ifstream in_triggerFile;
-	in_triggerFile.open(Form("./%s_triggerID.dat",Energy.Data());
+	in_triggerFile.open(Form("./%s_triggerID.dat",Energy.Data()));
 	TriggerID.clear();
 	if(in_triggerFile.is_open())
 	{
@@ -2668,7 +2668,8 @@ Bool_t Init()
 	PileupLowlimit->SetParameters(-6.33246e+00,7.90568e-02,3.03279e-02,-5.03738e-04,3.82206e-06,-1.30813e-08,1.64832e-11);
 	Delta_Psi2 = new TF1("Delta_Psi2","0.5*( 2*[0]*sin(2*x)-2*[1]*cos(2*x)+[3]*sin(4*x)-[2]*cos(4*x) )",-TMath::Pi(),TMath::Pi());
 	Delta_Psi2->SetParNames("<cos2#Psi_{2}>","<sin2#Psi_{2}>","<cos4#Psi_{2}>","<sin4#Psi_{2}>");
-	Delta_Psi2->SetParameters(FlatEP_Par);
+	double *FlatEP_Par_Fit = FlatEP_Par.data();
+	Delta_Psi2->SetParameters(FlatEP_Par_Fit);
 	// Delta_Psi2->SetParameters(0.001461,0.000840,0.002069,0.002289);
 	f_upper->SetParameters(6.32816,0.689232,-0.00185181,6.31563e-06,-8.29481e-09);
 	f_lower->SetParameters(-5.20165,0.144438,0.00186397,-1.28471e-05,4.28608e-08);
