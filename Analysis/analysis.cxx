@@ -391,6 +391,7 @@ int main(int argc, char** argv)
 	TString inFile="test.list";
 	char outFile[1024];
 	sprintf(outFile,"test/test");
+	Energy = "9p2";
 	if(argc==4){
 		inFile = argv[1];
 		Energy = argv[3];
