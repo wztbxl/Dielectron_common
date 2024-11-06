@@ -682,7 +682,7 @@ Bool_t passEvent(miniDst* event)
 
 	hnTofHitsvsRefMult_noCut->Fill(refMult,mnTOFMatch);
 	if(TMath::Abs(vx)<1.e-5 && TMath::Abs(vy)<1.e-5 && TMath::Abs(vz)<1.e-5) return kFALSE;
-	// if(!pileupRejection(vz, refMult, mnTOFMatch)) return kFALSE; // my version from pileup.h
+	// if(!pileupRejection(vz, refMult, mnTOFMatch)) return kFALSE; // my version form pileup.h
 	hnEvts->Fill(5);
 	if(TMath::Abs(vz)>=mVzCut) return kFALSE;//vz should also be in the range listed in the parameters file to do the refMult correction
 	hnEvts->Fill(2);
@@ -2542,7 +2542,7 @@ Bool_t Init()
 	}
 	indata.close();
 
-	indata.open(From("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalRunList.dat",Energy.Data()));
+	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalRunList.dat",Energy.Data()));
 	mTotalRunId.clear();
 	if(indata.is_open()){
 		cout<<"read in total run number list and recode run number ...";
@@ -2560,7 +2560,7 @@ Bool_t Init()
 	}
 	indata.close();
 
-	indata.open(From("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/Flatting_Par_Fit.dat",Energy.Data()));
+	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/Flatting_Par_Fit.dat",Energy.Data()));
 	FlatEP_Par.clear();
 	if(indata.is_open()){
 		cout<<"read in the event plane flatting parameters ...";
@@ -2578,7 +2578,7 @@ Bool_t Init()
 
 	//read in bad run for 580001 and 580021
 	ifstream indata_001;
-	indata.open(From("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()));
+	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()));
 	mBadRunId_001.clear();
 	if(indata_001.is_open()){
 		cout<<"read in bad run list for 9.2 GeV Au+Au GeV ";
