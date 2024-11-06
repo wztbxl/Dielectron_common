@@ -2523,6 +2523,7 @@ void writeHistograms(char* outFile)
 Bool_t Init()
 {
 	cout<<endl;
+	cout << "STARTING at energy : " << Energy << endl;
 
 	ifstream indata;
 
@@ -2563,6 +2564,7 @@ Bool_t Init()
 	}
 	indata.close();
 
+	cout << "Loading the flatting event plane parameter from " << Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/Flatting_Par_Fit.dat",Energy.Data()) << endl;
 	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/Flatting_Par_Fit.dat",Energy.Data()));
 	FlatEP_Par.clear();
 	if(indata.is_open()){
@@ -2580,6 +2582,7 @@ Bool_t Init()
 	indata.close();
 
 	//read in bad run for 580001 and 580021
+	cout << "Loading the bad runlist from " << Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()) << endl;
 	ifstream indata_001;
 	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()));
 	mBadRunId_001.clear();
