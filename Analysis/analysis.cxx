@@ -217,7 +217,7 @@ TH1F *hFinalEventPlane_Fit;
 TH2D *hEventPlaneWestvsEast;
 TTree *tree = new TTree("myTree", "check event plane");
 Double_t etaplus_Qx,etaplus_Qy,etaminus_Qx,etaminus_Qy,etaplus_Qx_recenter,etaplus_Qy_recenter,etaminus_Qx_recenter,etaminus_Qy_recenter,etaplus_Qx_factor,etaplus_Qy_factor,etaminus_Qx_factor,etaminus_Qy_factor,RawEp,RawEp_east,RawEp_west,RecenterEp,RecenterEp_east,RecenterEp_west;
-Int RunID_check;
+Int_t RunID_check;
 
 TH1D *hCosthetastar;
 TH1D *hMixCosthetastar;
