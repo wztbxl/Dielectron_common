@@ -1633,10 +1633,15 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	if(mDebug) cout << "before get raw Q" << endl;
 
 	TVector2 mRawQ(Qx,Qy);
+	TVector2 mRawQWest(mPlusQx,mPlusQy);
+	TVector2 mRawQEast(mMinusQx,mMinusQy);
 	// Double_t rawEP = 0.5*mRawQ.Phi();
 	Double_t rawEP = 0.5*TMath::ATan2(Qy,Qx);
 	RawEp = rawEP;
+	RawEp_west = 0.5*TMath::ATan2(mPlusQx,mPlusQy);
+	RawEp_east = 0.5*TMath::ATan2(mMinusQx,mMinusQy);
 	if(rawEP<0.) rawEP += TMath::Pi();
+
 	hRawEventPlane->Fill(rawEP);
 
 	//reject the electron for etaplus and etaminus
@@ -1733,7 +1738,7 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	int east_flag = 0;
 	if( recenterEPWest < 2.0106193 && recenterEPWest > 2.0001473 ) west_flag = 1;
 	if (recenterEPEast < 2.4504423 && recenterEPEast > 2.4399703 ) east_flag = 1;
-	if( west_flag || east_flag ) tree->Fill();
+	if( west_flag && east_flag ) tree->Fill();
 	
 
 	// Double_t recenterEP = 0.5*mRawQ.Phi();
