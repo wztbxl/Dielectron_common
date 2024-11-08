@@ -1677,10 +1677,10 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	// hQXvsQYvsRunIndex_rawcenter_east->Fill(mMinusQx/mEtaMinusPtWeight,mMinusQy/mEtaMinusPtWeight,centrality);
 
 	//Do the recenter
-	Double mRecenter_PlusQx = mPlusQx-etaplusQx_cent->GetBinContent(centrality+1);
-	Double mRecenter_PlusQy = mPlusQy-etaplusQy_cent->GetBinContent(centrality+1);
-	Double mRecenter_MinusQx = mMinusQx-etaminusQx_cent->GetBinContent(centrality+1);
-	Double mRecenter_MinusQy = mMinusQy-etaminusQy_cent->GetBinContent(centrality+1);
+	Double_t mRecenter_PlusQx = mPlusQx-etaplusQx_cent->GetBinContent(centrality+1);
+	Double_t mRecenter_PlusQy = mPlusQy-etaplusQy_cent->GetBinContent(centrality+1);
+	Double_t mRecenter_MinusQx = mMinusQx-etaminusQx_cent->GetBinContent(centrality+1);
+	Double_t mRecenter_MinusQy = mMinusQy-etaminusQy_cent->GetBinContent(centrality+1);
 
 	etaplus_Qx_factor = etaplusQx_cent->GetBinContent(centrality+1);
 	etaplus_Qy_factor = etaplusQy_cent->GetBinContent(centrality+1);
