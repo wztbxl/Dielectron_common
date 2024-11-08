@@ -215,6 +215,10 @@ TH1D *hFinalEventPlaneWest;
 TH1D *hFinalEventPlaneEast;
 TH1F *hFinalEventPlane_Fit;
 TH2D *hEventPlaneWestvsEast;
+TTree *tree = new TTree("myTree", "check event plane");
+Double_t etaplus_Qx,etaplus_Qy,etaminus_Qx,etaminus_Qy,etaplus_Qx_recenter,etaplus_Qy_recenter,etaminus_Qx_recenter,etaminus_Qy_recenter,etaplus_Qx_factor,etaplus_Qy_factor,etaminus_Qx_factor,etaminus_Qy_factor,RawEp,RawEp_east,RawEp_west,RecenterEp,RecenterEp_east,RecenterEp_west;
+Int RunID_check;
+
 TH1D *hCosthetastar;
 TH1D *hMixCosthetastar;
 TH1F *hDelta_Psi2_1D;
@@ -1588,7 +1592,10 @@ Double_t reCalEventPlane(miniDst* event, Bool_t rejElectron)
 Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 //Zhen rewrite this fucntion to get the new event plane
 {
+	etaplus_Qx = 0; etaplus_Qy = 0; etaminus_Qx = 0; etaminus_Qy = 0; etaplus_Qx_recenter = 0; etaplus_Qy_recenter = 0; etaminus_Qx_recenter = 0; etaminus_Qy_recenter = 0; etaplus_Qx_factor = 0; etaplus_Qy_factor = 0; etaminus_Qx_factor = 0; etaminus_Qy_factor = 0; RawEp = 0; RawEp_east = 0; RawEp_west = 0; RecenterEp = 0; RecenterEp_east = 0; RecenterEp_west = 0;
+	RunID_check = 0;
 	Int_t runId  = event->mRunId;
+	RunID_check = runId;
 	Float_t vz = event->mVertexZ;
 	Float_t vy = event->mVertexY;
 	Float_t vx = event->mVertexX;
@@ -1628,6 +1635,7 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	TVector2 mRawQ(Qx,Qy);
 	// Double_t rawEP = 0.5*mRawQ.Phi();
 	Double_t rawEP = 0.5*TMath::ATan2(Qy,Qx);
+	RawEp = rawEP;
 	if(rawEP<0.) rawEP += TMath::Pi();
 	hRawEventPlane->Fill(rawEP);
 
@@ -1650,6 +1658,12 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 			}
 		}
 	}
+	//for the tree
+	etaplus_Qx = mPlusQx;
+	etaplus_Qy = mPlusQy;
+	etaminus_Qx = mMinusQx;
+	etaminus_Qy = mMinusQy;
+
 	//recalculate the Qx Qy with electron rejection
 	// Qx = mPlusQx/mEtaPlusPtWeight - mMinusQx/mEtaMinusPtWeight; 
 	// Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
@@ -1663,18 +1677,28 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	// hQXvsQYvsRunIndex_rawcenter_east->Fill(mMinusQx/mEtaMinusPtWeight,mMinusQy/mEtaMinusPtWeight,centrality);
 
 	//Do the recenter
-	mPlusQx = mPlusQx-etaplusQx_cent->GetBinContent(centrality+1);
-	mPlusQy = mPlusQy-etaplusQy_cent->GetBinContent(centrality+1);
-	mMinusQx = mMinusQx-etaminusQx_cent->GetBinContent(centrality+1);
-	mMinusQy = mMinusQy-etaminusQy_cent->GetBinContent(centrality+1);
+	Double mRecenter_PlusQx = mPlusQx-etaplusQx_cent->GetBinContent(centrality+1);
+	Double mRecenter_PlusQy = mPlusQy-etaplusQy_cent->GetBinContent(centrality+1);
+	Double mRecenter_MinusQx = mMinusQx-etaminusQx_cent->GetBinContent(centrality+1);
+	Double mRecenter_MinusQy = mMinusQy-etaminusQy_cent->GetBinContent(centrality+1);
+
+	etaplus_Qx_factor = etaplusQx_cent->GetBinContent(centrality+1);
+	etaplus_Qy_factor = etaplusQy_cent->GetBinContent(centrality+1);
+	etaminus_Qx_factor = etaminusQx_cent->GetBinContent(centrality+1);
+	etaminus_Qy_factor = etaminusQy_cent->GetBinContent(centrality+1);
+	etaplus_Qx_recenter = mRecenter_PlusQx;
+	etaplus_Qy_recenter = mRecenter_PlusQy;
+	etaminus_Qx_recenter = mRecenter_MinusQx;
+	etaminus_Qy_recenter = mRecenter_MinusQy;	
 
 	//recalculate the Qx and Qy with recenter
 	// Qx = mPlusQx/mEtaPlusPtWeight - mMinusQx/mEtaMinusPtWeight; 
 	// Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
 	// Qx = mPlusQx - mMinusQx; 
 	// Qy = mPlusQy - mMinusQy;
-	Qx = mPlusQx + mMinusQx; 
-	Qy = mPlusQy + mMinusQy;
+	Double_t mRecenterQx, mRecenterQy;
+	mRecenterQx = mRecenter_PlusQx + mRecenter_MinusQx; 
+	mRecenterQy = mRecenter_PlusQy + mRecenter_MinusQy;
 	Double_t mReCenterQxEast, mReCenterQyEast;
 	Double_t mReCenterQxWest, mReCenterQyWest;
 	// mReCenterQxEast = 
@@ -1684,24 +1708,34 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	Double_t recenterEP;
 	Double_t recenterEPEast;
 	Double_t recenterEPWest;
-	TVector2 mReCenterQ(Qx, Qy);
+	TVector2 mReCenterQ(mRecenterQx, mRecenterQy);
 	TVector2 mReCenterQWest(mPlusQx, mPlusQy);
     TVector2 mReCenterQEast(mMinusQx, mMinusQy);
 	if(mReCenterQ.Mod() > 0){
 		recenterEP = 0.5*TMath::ATan2(Qx,Qy);
+		RecenterEp = recenterEP;
 		if(recenterEP<0.) recenterEP += TMath::Pi();
 		hReCenterEventPlane->Fill(recenterEP);
 	}
 	if(mReCenterQWest.Mod() > 0){
 		recenterEPWest = 0.5*mReCenterQWest.Phi();
+		RecenterEp_west = recenterEPWest;
 		if(recenterEPWest<0.) recenterEPWest += TMath::Pi();
 		hReCenterEventPlaneWest->Fill(recenterEPWest);
 	}
 	if(mReCenterQEast.Mod() > 0){
 		recenterEPEast = 0.5*mReCenterQEast.Phi();
+		RecenterEp_east = recenterEPEast;
 		if(recenterEPEast<0.) recenterEPEast += TMath::Pi();
 		hReCenterEventPlaneEast->Fill(recenterEPEast);
 	}
+	int west_flag = 0;
+	int east_flag = 0;
+	if( recenterEPWest < 2.0106193 && recenterEPWest > 2.0001473 ) west_flag = 1;
+	if (recenterEPEast < 2.4504423 && recenterEPEast > 2.4399703 ) east_flag = 1;
+	if( west_flag || east_flag ) tree->Fill();
+	
+
 	// Double_t recenterEP = 0.5*mRawQ.Phi();
 	recenterEP = 0.5*TMath::ATan2(Qy,Qx);
 	if (recenterEP < 0.) recenterEP += TMath::Pi();
@@ -2102,6 +2136,28 @@ void bookHistograms()
 	hLargeDiffEvt_vz = new TH1D("hLargeDiffEvt_vz","hLargeDiffEvt_vz;",1200,-60,60);
 	hLargeDiffEvt_vr = new TH1D("hLargeDiffEvt_vr","hLargeDiffEvt_vr;",500,0,5);
 	EventPlanRes = new TProfile("EventPlanRes","EventPlanRes",10,-0.5,9.5);
+
+	//set tree branch address
+	tree->Branch("RawEP_west_Qx", &etaplus_Qx, "etaplus_Qx/D"); 
+	tree->Branch("RawEP_west_Qy", &etaplus_Qy, "etaplus_Qy/D"); 
+	tree->Branch("RawEP_east_Qx", &etaminus_Qx, "etaminus_Qx/D"); 
+	tree->Branch("RawEP_east_Qy", &etaminus_Qy, "etaminus_Qy/D"); 
+	tree->Branch("RecenterEP_west_Qx", &etaplus_Qx_recenter, "etaplus_Qx_recenter/D"); 
+	tree->Branch("RecenterEP_west_Qy", &etaplus_Qy_recenter, "etaplus_Qy_recenter/D"); 
+	tree->Branch("RecenterEP_east_Qx", &etaminus_Qx_recenter, "etaminus_Qx_recenter/D"); 
+	tree->Branch("RecenterEP_east_Qy", &etaminus_Qy_recenter, "etaminus_Qy_recenter/D"); 
+	tree->Branch("RecenterEP_factor_west_Qx", &etaplus_Qx_factor, "eventID/D"); 
+	tree->Branch("RecenterEP_factor_west_Qy", &etaplus_Qy_factor, "eventID/D"); 
+	tree->Branch("RecenterEP_factor_east_Qx", &etaminus_Qx_factor, "eventID/D"); 
+	tree->Branch("RecenterEP_factor_east_Qy", &etaminus_Qy_factor, "eventID/D"); 
+    tree->Branch("RawEp", &RawEp, "RawEp/D");
+    tree->Branch("RawEp_east", &RawEp_east, "RawEp_east/D");
+    tree->Branch("RawEp_west", &RawEp_west, "RawEp_west/D");
+    tree->Branch("RecenterEp", &RecenterEp, "RecenterEp/D");
+    tree->Branch("RecenterEp_east", &RecenterEp_east, "RecenterEp_east/D");
+    tree->Branch("RecenterEp_west", &RecenterEp_west, "RecenterEp_west/D");
+    tree->Branch("RunID_check", &RunID_check, "RunID_check/I");
+
 	// hQXvsQYvsRunIndex = new TH3F("hQXvsQYvsRunIndex","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
 	// hQXvsQYvsRunIndex_raw = new TH3F("hQXvsQYvsRunIndex_raw","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
 	// hQXvsQYvsRunIndex_rawcenter_west = new TH3F("hQXvsQYvsRunIndex_rawcenter_west","; Qx; Qy; Centrality",400,-10,10,400,-10,10,10,0,10);
@@ -2307,6 +2363,7 @@ void writeHistograms(char* outFile)
 	cout<<"Writing histograms into "<<buf<<endl;
 	TFile *mFile = new TFile(buf,"recreate");
 	mFile->cd();
+	tree->Write();
 
 	//in passEvent function
 	hnEvts->Write();
