@@ -1775,17 +1775,17 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	Double_t deltaPhi=0;
 	for(Int_t i=0;i<mArrayLength;i++){
 		// deltaPhi += 3./(i+1)*(-1.*shiftCorrsin[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos[i]*sin(2.*(i+1)*recenterEP));
-				deltaPhi += 1./(i+1)*(-1.*shiftCorrsin[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos[i]*sin(2.*(i+1)*recenterEP));
+		deltaPhi += 1./(i+1)*(-1.*shiftCorrsin[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos[i]*sin(2.*(i+1)*recenterEP));
 
 	}
 	Double_t deltaPhi_east=0;
 	for(Int_t i=0;i<mArrayLength;i++){
-		deltaPhi_east += 1./(i+1)*(-1.*shiftCorrsin_east[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos_east[i]*sin(2.*(i+1)*recenterEP));
+		deltaPhi_east += 1./(i+1)*(-1.*shiftCorrsin_east[i]*cos(2.*(i+1)*recenterEPEast) + shiftCorrcos_east[i]*sin(2.*(i+1)*recenterEPEast));
 	}
 	Double_t deltaPhi_west=0;
 	for(Int_t i=0;i<mArrayLength;i++){
 		// deltaPhi_east += 3./(i+1)*(-1.*shiftCorrsin[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos[i]*sin(2.*(i+1)*recenterEP));
-		deltaPhi_west += 1./(i+1)*(-1.*shiftCorrsin_west[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos_west[i]*sin(2.*(i+1)*recenterEP));
+		deltaPhi_west += 1./(i+1)*(-1.*shiftCorrsin_west[i]*cos(2.*(i+1)*recenterEPWest) + shiftCorrcos_west[i]*sin(2.*(i+1)*recenterEPWest));
 	}
 	deltaPhi = deltaPhi/2.;
 	if(deltaPhi<0.) deltaPhi += TMath::Pi();
@@ -1810,6 +1810,8 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	hEventPlaneWestvsEast->Fill(finalEP_east,finalEP_west);
 	EventPlanRes->Fill(mCentrality, cos(2*(finalEP_east-finalEP_west)));
 	// hDelta_Psi2->Fill(recenterEP,deltaPhi);
+	hFinalEventPlaneEast->Fill(finalEP_east);
+	hFinalEventPlaneWest->Fill(finalEP_west);
 
 	double deltaPhi_2 = Delta_Psi2->Eval(recenterEP);
 	if(deltaPhi_2<0.) deltaPhi_2 += TMath::Pi();
