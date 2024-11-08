@@ -1714,10 +1714,10 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	Double_t recenterEPEast;
 	Double_t recenterEPWest;
 	TVector2 mReCenterQ(mRecenterQx, mRecenterQy);
-	TVector2 mReCenterQWest(mPlusQx, mPlusQy);
-    TVector2 mReCenterQEast(mMinusQx, mMinusQy);
+	TVector2 mReCenterQWest(mRecenter_PlusQx, mRecenter_PlusQy);
+    TVector2 mReCenterQEast(mRecenter_MinusQx, mRecenter_MinusQy);
 	if(mReCenterQ.Mod() > 0){
-		recenterEP = 0.5*TMath::ATan2(Qx,Qy);
+		recenterEP = 0.5*TMath::ATan2(mRecenterQx,mRecenterQy);
 		RecenterEp = recenterEP;
 		if(recenterEP<0.) recenterEP += TMath::Pi();
 		hReCenterEventPlane->Fill(recenterEP);
