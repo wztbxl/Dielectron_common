@@ -1592,6 +1592,9 @@ Double_t reCalEventPlane(miniDst* event, Bool_t rejElectron)
 Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 //Zhen rewrite this fucntion to get the new event plane
 {
+	double finalEP = -1;
+	double finalEP_fit = -1;
+
 	etaplus_Qx = 0; etaplus_Qy = 0; etaminus_Qx = 0; etaminus_Qy = 0; etaplus_Qx_recenter = 0; etaplus_Qy_recenter = 0; etaminus_Qx_recenter = 0; etaminus_Qy_recenter = 0; etaplus_Qx_factor = 0; etaplus_Qy_factor = 0; etaminus_Qx_factor = 0; etaminus_Qy_factor = 0; RawEp = 0; RawEp_east = 0; RawEp_west = 0; RecenterEp = 0; RecenterEp_east = 0; RecenterEp_west = 0;
 	RunID_check = 0;
 	Int_t runId  = event->mRunId;
@@ -1674,9 +1677,29 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	// Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
 	Qx = mPlusQx + mMinusQx; 
 	Qy = mPlusQy + mMinusQy;
-	double eventPlane_rejectE =  0.5*TMath::ATan2(Qy,Qx);
-	if (eventPlane_rejectE < 0.) eventPlane_rejectE += TMath::Pi();
-	hNewEventPlane->Fill(eventPlane_rejectE);
+	mRawQ(Qx,Qy);
+	mRawQWest(mPlusQx,mPlusQy);
+	mRawQEast(mMinusQx,mMinusQy);
+	if (mRawQ.Mod > 0 )
+	{
+		double eventPlane_rejectE =  0.5*TMath::ATan2(Qy,Qx);
+		if (eventPlane_rejectE < 0.) eventPlane_rejectE += TMath::Pi();
+		hNewEventPlane->Fill(eventPlane_rejectE);
+	}
+	if (mRawQWest.Mod > 0 )
+	{
+		double eventPlane_rejectE =  0.5*TMath::ATan2(mPlusQy,mPlusQx);
+		if (eventPlane_rejectE < 0.) eventPlane_rejectE += TMath::Pi();
+		hNewEventPlaneWest->Fill(eventPlane_rejectE);
+	}
+	if (mRawQEast.Mod > 0 )
+	{
+		double eventPlane_rejectE =  0.5*TMath::ATan2(mMinusQy,mMinusQx);
+		if (eventPlane_rejectE < 0.) eventPlane_rejectE += TMath::Pi();
+		hNewEventPlaneEast->Fill(eventPlane_rejectE);
+	}
+
+	if (mRawQ.Mod <= 0 ) return finalEP_fit;
 	// hQXvsQYvsRunIndex_raw->Fill(Qx,Qy,mCentrality);
 	// hQXvsQYvsRunIndex_rawcenter_west->Fill(mPlusQx/mEtaPlusPtWeight,mPlusQy/mEtaPlusPtWeight,centrality);
 	// hQXvsQYvsRunIndex_rawcenter_east->Fill(mMinusQx/mEtaMinusPtWeight,mMinusQy/mEtaMinusPtWeight,centrality);
@@ -1797,7 +1820,7 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	if(deltaPhi_west<0.) deltaPhi_west += TMath::Pi();
 	if(deltaPhi_west>=TMath::Pi()) deltaPhi_west -= TMath::Pi();
 	hDelta_Psi2_1D->Fill(deltaPhi);
-	double finalEP = recenterEP + deltaPhi;
+	finalEP = recenterEP + deltaPhi;
 	if(finalEP<0.) finalEP += TMath::Pi();
 	if(finalEP>=TMath::Pi()) finalEP -= TMath::Pi();
 	double finalEP_east = recenterEPEast + deltaPhi_east;
@@ -1816,7 +1839,7 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	double deltaPhi_2 = Delta_Psi2->Eval(recenterEP);
 	if(deltaPhi_2<0.) deltaPhi_2 += TMath::Pi();
 	if(deltaPhi_2>=TMath::Pi()) deltaPhi_2 -= TMath::Pi();
-	double finalEP_fit = recenterEP+deltaPhi_2;
+	finalEP_fit = recenterEP+deltaPhi_2;
 	if(finalEP_fit<0.) finalEP_fit += TMath::Pi();
 	if(finalEP_fit>=TMath::Pi()) finalEP_fit -= TMath::Pi();
 
