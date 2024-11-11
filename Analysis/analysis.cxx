@@ -1677,29 +1677,29 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	// Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
 	Qx = mPlusQx + mMinusQx; 
 	Qy = mPlusQy + mMinusQy;
-	mRawQ(Qx,Qy);
-	mRawQWest(mPlusQx,mPlusQy);
-	mRawQEast(mMinusQx,mMinusQy);
-	if (mRawQ.Mod > 0 )
+	mRawQ.SetX(Qx); mRawQ.SetY(Qy);
+	mRawQWest.SetX(mPlusQx); mRawQWest.SetY(mPlusQy);
+	mRawQEast.SetX(mMinusQx); mRawQEast.SetY(mMinusQy);
+	if (mRawQ.Mod() > 0 )
 	{
 		double eventPlane_rejectE =  0.5*TMath::ATan2(Qy,Qx);
 		if (eventPlane_rejectE < 0.) eventPlane_rejectE += TMath::Pi();
 		hNewEventPlane->Fill(eventPlane_rejectE);
 	}
-	if (mRawQWest.Mod > 0 )
+	if (mRawQWest.Mod() > 0 )
 	{
 		double eventPlane_rejectE =  0.5*TMath::ATan2(mPlusQy,mPlusQx);
 		if (eventPlane_rejectE < 0.) eventPlane_rejectE += TMath::Pi();
 		hNewEventPlaneWest->Fill(eventPlane_rejectE);
 	}
-	if (mRawQEast.Mod > 0 )
+	if (mRawQEast.Mod() > 0 )
 	{
 		double eventPlane_rejectE =  0.5*TMath::ATan2(mMinusQy,mMinusQx);
 		if (eventPlane_rejectE < 0.) eventPlane_rejectE += TMath::Pi();
 		hNewEventPlaneEast->Fill(eventPlane_rejectE);
 	}
 
-	if (mRawQ.Mod <= 0 ) return finalEP_fit;
+	if (mRawQ.Mod() <= 0 ) return finalEP_fit;
 	// hQXvsQYvsRunIndex_raw->Fill(Qx,Qy,mCentrality);
 	// hQXvsQYvsRunIndex_rawcenter_west->Fill(mPlusQx/mEtaPlusPtWeight,mPlusQy/mEtaPlusPtWeight,centrality);
 	// hQXvsQYvsRunIndex_rawcenter_east->Fill(mMinusQx/mEtaMinusPtWeight,mMinusQy/mEtaMinusPtWeight,centrality);
