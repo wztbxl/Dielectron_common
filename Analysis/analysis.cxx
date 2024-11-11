@@ -1677,9 +1677,12 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	// Qy = mPlusQy/mEtaPlusPtWeight - mMinusQy/mEtaMinusPtWeight;
 	Qx = mPlusQx + mMinusQx; 
 	Qy = mPlusQy + mMinusQy;
-	mRawQ.SetX(Qx); mRawQ.SetY(Qy);
-	mRawQWest.SetX(mPlusQx); mRawQWest.SetY(mPlusQy);
-	mRawQEast.SetX(mMinusQx); mRawQEast.SetY(mMinusQy);
+	mRawQ.Set(Qx,Qy);
+	mRawQWest.Set(mPlusQx,mPlusQy);
+	mRawQEast.Set(mMinusQx,mMinusQy);
+	// mRawQ.SetX(Qx); mRawQ.SetY(Qy);
+	// mRawQWest.SetX(mPlusQx); mRawQWest.SetY(mPlusQy);
+	// mRawQEast.SetX(mMinusQx); mRawQEast.SetY(mMinusQy);
 	if (mRawQ.Mod() > 0 )
 	{
 		double eventPlane_rejectE =  0.5*TMath::ATan2(Qy,Qx);
