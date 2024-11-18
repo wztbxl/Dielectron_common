@@ -1813,7 +1813,7 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 		// deltaPhi_east += 3./(i+1)*(-1.*shiftCorrsin[i]*cos(2.*(i+1)*recenterEP) + shiftCorrcos[i]*sin(2.*(i+1)*recenterEP));
 		deltaPhi_west += 1./(i+1)*(-1.*shiftCorrsin_west[i]*cos(2.*(i+1)*recenterEPWest) + shiftCorrcos_west[i]*sin(2.*(i+1)*recenterEPWest));
 	}
-	// deltaPhi = deltaPhi/2.;
+	deltaPhi = deltaPhi/2.;
 	if(deltaPhi<0.) deltaPhi += TMath::Pi();
 	if(deltaPhi>=TMath::Pi()) deltaPhi -= TMath::Pi();
 	deltaPhi_east = deltaPhi_east/2.;//why divide by 2? indifination it should not be

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <TString.h>
 
 void load(){
 	//Load all the System libraries
@@ -54,7 +55,7 @@ void load(){
 	gSystem->Load("StMiniTreeMaker");
 }
 
-void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TString outputFile="test/test.root", const Bool_t debug = kFALSE)
+void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TString Energy = "9p2", const TString outputFile="test/test.root", const Bool_t debug = kFALSE)
 {
 	load();
 
@@ -100,6 +101,26 @@ void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TStrin
 	//	miniTreeMaker->setStreamName("st_mtd");
 	//if(name.find("st_physics")!=std::string::npos)
 	//	miniTreeMaker->setStreamName("st_physics");
+
+	//set triggerIDs
+	IntVec triggerID;
+	ifstream indata;
+	indata.open(Form("./triggerID_%s.dat",Energy.Data()));
+	if(indata.is_open()){
+		cout<<"read in total triggerID ...";
+		Int_t trigger;
+		while(indata>>trigger){
+			miniTreeMaker->setTriggerID(trigger);
+			cout << "now loading " << Energy << " trigger ID : " << trigger << endl;
+		}
+		cout<<" [OK]"<<endl;
+	}else{
+		cout<<"Failed to total triggerID !!!"<<endl;
+		return;
+	}
+
+
+
 	if(debug)
 		miniTreeMaker->SetDebug(1);
 
