@@ -199,6 +199,6 @@ inline void StMiniTreeMaker::setStreamName(const TString name) { mStreamName = n
 inline void StMiniTreeMaker::setPrintMemory(const Bool_t pMem) { mPrintMemory = pMem; }
 inline void StMiniTreeMaker::setPrintCpu(const Bool_t pCpu) { mPrintCpu = pCpu; }
 inline void StMiniTreeMaker::setPrintConfig(const Bool_t print) { mPrintConfig = print; }
-inline void StMiniTreeMaker::setTriggerID(const int triggerID) {mTriggerIDs.push_back(triggerID)}
+inline void StMiniTreeMaker::setTriggerID(const int triggerID) {mTriggerIDs.push_back(triggerID);}
 
 #endif
