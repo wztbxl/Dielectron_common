@@ -76,22 +76,25 @@ void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TStrin
 	miniTreeMaker->setOutFileName(outputFile);
 	miniTreeMaker->setUseDefaultVtx(1);
 	// miniTreeMaker->setMaxVtxR(2.5);//for QA
-	miniTreeMaker->setMaxVtxR(3.);//for QA
-	// miniTreeMaker->setMaxVtxR(3.0);//for pure sample
-	miniTreeMaker->setMaxVtxZ(70); // for QA
-	// miniTreeMaker->setMaxVtxZ(60.);//for pure sample
+	// miniTreeMaker->setMaxVtxR(3.);//for QA
+	miniTreeMaker->setMaxVtxR(2.0);//for pure sample
+	// miniTreeMaker->setMaxVtxZ(70); // for QA
+	miniTreeMaker->setMaxVtxZ(35.);//for pure sample
 	miniTreeMaker->setMaxVzDiff(13.);
-	miniTreeMaker->setMinNHitsFitRatio(0.5);//for QA
-	// miniTreeMaker->setMinNHitsFitRatio(0.52);//for pure sample
-	miniTreeMaker->setMaxTrackEta(2);//for QA
-	// miniTreeMaker->setMaxTrackEta(1.);//for pure sample
-	miniTreeMaker->setMinTrackPt(0.01); // for QA
-	// miniTreeMaker->setMinTrackPt(0.2);
-	miniTreeMaker->setMinNHitsFit(5); // for QA
-	// miniTreeMaker->setMinNHitsFit(20);//for pure sample
-	miniTreeMaker->setMinNHitsDedx(5);
+	// miniTreeMaker->setMinNHitsFitRatio(0.5);//for QA
+	miniTreeMaker->setMinNHitsFitRatio(0.52);//for pure sample
+	// miniTreeMaker->setMaxTrackEta(2);//for QA
+	miniTreeMaker->setMaxTrackEta(1.);//for pure sample
+	// miniTreeMaker->setMinTrackPt(0.01); // for QA
+	miniTreeMaker->setMinTrackPt(0.2);
+	// miniTreeMaker->setMinNHitsFit(5); // for QA
+	miniTreeMaker->setMinNHitsFit(20);//for pure sample
+	// miniTreeMaker->setMinNHitsDedx(5);// for QA
+	miniTreeMaker->setMinNHitsDedx(15);//for pure sample
   // miniTreeMaker->setParticle(1);// 1 is pion,2 is kaon,3 is proton
 	miniTreeMaker->setMaxBeta2TOF(0.05);
+	// miniTreeMaker->setMaxBeta2TOF(0.05);
+	miniTreeMaker->setMaxDca(1.)//pure sample
 	//miniTreeMaker->setPrintMemory(1);
 	//miniTreeMaker->setPrintCpu(1);
 	miniTreeMaker->setPrintConfig(1);
