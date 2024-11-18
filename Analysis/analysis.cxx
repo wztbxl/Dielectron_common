@@ -1702,7 +1702,7 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 		hNewEventPlaneEast->Fill(eventPlane_rejectE);
 	}
 
-	if (mRawQEast.Mod() <= 0 && mRawQWest.Mod() <= 0 ) return finalEP_fit;
+	if (mRawQEast.Mod() <= 0 || mRawQWest.Mod() <= 0 ) return finalEP_fit;
 	// hQXvsQYvsRunIndex_raw->Fill(Qx,Qy,mCentrality);
 	// hQXvsQYvsRunIndex_rawcenter_west->Fill(mPlusQx/mEtaPlusPtWeight,mPlusQy/mEtaPlusPtWeight,centrality);
 	// hQXvsQYvsRunIndex_rawcenter_east->Fill(mMinusQx/mEtaMinusPtWeight,mMinusQy/mEtaMinusPtWeight,centrality);
