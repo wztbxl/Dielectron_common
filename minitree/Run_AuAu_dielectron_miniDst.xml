@@ -8,7 +8,7 @@
 		ln -s /star/u/wangzhen/run20/Dielectron_Common/minitree/StRoot ./
 		ln -s /star/u/wangzhen/run20/Dielectron_Common/minitree/doEvent.C ./
 
-		starver SL23d
+		starver SL23a
 		root4star -l -q -b ./doEvent.C\(-1,\"$FILELIST\",\"9p2",\"$SCRATCH/${JOBID}.root\",0\)
 
 	 </command>
@@ -18,8 +18,8 @@
         <Generator>
 		       <Location>/star/u/wangzhen/run20/Dielectron_Common/minitree/info/</Location>
 	    </Generator> 
-  	    <input URL="filelist:/star/u/wangzhen/run20/Dielectron_Common/minitree/Run19_19p6GeV_2019_pico.list"/> 
-        <output fromScratch="*.root" toURL="file:/star/u/wangzhen/run20/Dielectron_Common/minitree/output/"/>
+  	    <input URL="filelist:/star/u/wangzhen/run20/Dielectron_Common/minitree/Run21_9p2GeV_2020_pico_bc_local.list"/> 
+        <output fromScratch="*.root" toURL="file:/star/u/wangzhen/run20/Dielectron_Common/minitree/output/9p2_AnalysisCut/"/>
 
 
 
