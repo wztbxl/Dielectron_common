@@ -13,6 +13,12 @@
 
 	 </command>
 
+		<SandBox>
+       		<Package>
+			<File>file:./triggerID_9p2.dat</File>
+        	</Package>
+	    </SandBox>
+
 	 <stdout URL="file:/star/u/wangzhen/run20/Dielectron_Common/minitree/log/$JOBID.out"/>
 		<stderr URL="file:/star/u/wangzhen/run20/Dielectron_Common/minitree/log/$JOBID.err"/>
         <Generator>
