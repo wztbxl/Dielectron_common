@@ -94,7 +94,7 @@ void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TStrin
   // miniTreeMaker->setParticle(1);// 1 is pion,2 is kaon,3 is proton
 	miniTreeMaker->setMaxBeta2TOF(0.05);
 	// miniTreeMaker->setMaxBeta2TOF(0.05);
-	miniTreeMaker->setMaxDca(1.)//pure sample
+	miniTreeMaker->setMaxDca(1.);//pure sample
 	//miniTreeMaker->setPrintMemory(1);
 	//miniTreeMaker->setPrintCpu(1);
 	miniTreeMaker->setPrintConfig(1);
