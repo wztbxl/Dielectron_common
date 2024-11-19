@@ -108,7 +108,7 @@ void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TStrin
 	//set triggerIDs
 	IntVec triggerID;
 	ifstream indata;
-	indata.open(Form("./triggerID_%s.dat",Energy.Data()));
+	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/minitree/triggerID_%s.dat",Energy.Data()));
 	if(indata.is_open()){
 		cout<<"read in total triggerID ...";
 		Int_t trigger;
@@ -118,7 +118,7 @@ void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TStrin
 		}
 		cout<<" [OK]"<<endl;
 	}else{
-		cout<<"Failed to total triggerID !!!"<<endl;
+		cout<<"Failed to read total triggerID !!!"<<endl;
 		return;
 	}
 
