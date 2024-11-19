@@ -106,6 +106,8 @@ void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TStrin
 	//	miniTreeMaker->setStreamName("st_physics");
 
 	//set triggerIDs
+	system("pwd");
+	system("ls");
 	IntVec triggerID;
 	ifstream indata;
 	indata.open(Form("./triggerID_%s.dat",Energy.Data()));
