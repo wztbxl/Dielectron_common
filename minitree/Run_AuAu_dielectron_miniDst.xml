@@ -24,8 +24,8 @@
         <Generator>
 		       <Location>/star/u/wangzhen/run20/Dielectron_Common/minitree/info/</Location>
 	    </Generator> 
-  	    <input URL="filelist:/star/u/wangzhen/run20/Dielectron_Common/minitree/test.list"/> 
-  	    <!-- <input URL="filelist:/star/u/wangzhen/run20/Dielectron_Common/minitree/Run21_9p2GeV_2020_pico_bc_local.list"/>  -->
+  	    <!-- <input URL="filelist:/star/u/wangzhen/run20/Dielectron_Common/minitree/test.list"/>  -->
+  	    <input URL="filelist:/star/u/wangzhen/run20/Dielectron_Common/minitree/Run21_9p2GeV_2020_pico_bc_local.list"/> 
         <output fromScratch="*.root" toURL="file:/star/u/wangzhen/run20/Dielectron_Common/minitree/output/9p2_AnalysisCut/"/>
 
 
