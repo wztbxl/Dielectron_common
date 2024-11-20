@@ -526,6 +526,7 @@ int main(int argc, char** argv)
 
 		// finalEventPlane = reCalEventPlane(event);//do not reject the electron contribution
 		// finalEventPlane = reCalEventPlane(event, kTRUE);//reject the electron contribution
+		if(mDebug) cout << "before reCalEventPlane_Zhen, mCentrality = " << mCentrality <<endl;
 		finalEventPlane = reCalEventPlane_Zhen(event,kTRUE);
 		// finalEventPlane = reCalEventPlane_Zhen(event,kFALSE);
 		if(mDebug) cout << "after recal Event Plane" << endl;
@@ -637,7 +638,7 @@ Bool_t passEvent(miniDst* event)
 	// reWeight = 1.;
 	Double_t RefMultCorr = refMult;
 	mCentrality = (int)event->mCentrality;
-	if(mDebug) cout << "mCentrality = " << mCentrality <<endl;
+	if(mDebug) cout << "At Pass Event, mCentrality = " << mCentrality <<endl;
   // mCentrality = mCentrality+1;
 //   cenBufferPointer = mCentrality;
 //   RefMultCorr = event->mGRefMultCorr;
@@ -1614,6 +1615,7 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	Int_t mEtaMinusNTrks = event->mEtaMinusNTrks;
 	Float_t mEtaPlusPtWeight = event->mEtaPlusPtWeight;
 	Float_t mEtaMinusPtWeight = event->mEtaMinusPtWeight;
+	if(mDebug) cout << "At reCalEventPlane_Zhen, mCentrality = " << mCentrality <<endl;
 	int centrality = mCentrality;
 	// int centrality = event->mCentrality;
 
