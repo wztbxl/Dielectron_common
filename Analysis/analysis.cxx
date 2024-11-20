@@ -68,8 +68,8 @@ void fill3DHistograms(std::string unlikeOrlike,TLorentzVector JPSI,int i,int j,i
 void fill3DHistograms_BKG(std::string unlikeOrlike, TLorentzVector JPSI,int i,int j,int pairs,std::string PosorNeg, std::string SameOrMix);
 void GetPtPhiCentBin(TLorentzVector pair,TLorentzVector Positron, int _mCentrality,float eventphi,int &ptindex,int &yindex,int &phiindex,int &CentIndex,double &costhe,Bool_t tangent, Int_t Flag );
 
-// int mDebug = 0;
-int mDebug = 1;
+int mDebug = 0;
+// int mDebug = 1;
 
 int nPi_K_P_tof = 0;//used for pile rejection
 TF1* f_upper = new TF1("f_upper","pol5",0,350);
@@ -714,7 +714,7 @@ Bool_t passEvent(miniDst* event)
 
 	Int_t centrality9 = mCentrality;
 	// hCentrality9->Fill(mCentrality);
-	// hCentrality9->Fill(mCentrality,reWeight);
+	hCentrality9->Fill(mCentrality,reWeight);
 	//hCentrality9->Fill(centrality9,reWeight);
 
 	vzBufferPointer = (Int_t)((vz+mVzCut)/(2*mVzCut)*mVzBins);
@@ -1618,7 +1618,7 @@ Double_t reCalEventPlane_Zhen(miniDst* event, Bool_t rejElectron)
 	if(mDebug) cout << "At reCalEventPlane_Zhen, mCentrality = " << mCentrality <<endl;
 	int centrality = mCentrality;
 	// int centrality = event->mCentrality;
-	hCentrality9->Fill(centrality,reWeight);
+	// hCentrality9->Fill(centrality,reWeight);
 
 	//get Q vector
 	// Float_t Qx = mPlusQx/mEtaPlusPtWeight - mMinusQx/mEtaMinusPtWeight; 
