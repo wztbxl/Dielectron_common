@@ -940,7 +940,7 @@ void makeRealPairs()
 					if(phi < 0) phi = phi+TMath::Pi();
 					deltaphi = phi -finalEventPlane;
 					if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
-					if(deltaphi < TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
+					if(deltaphi > TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
 					hMassvsDelta_Phi_Psi2_ULS[cenBufferPointer]->Fill(deltaphi,pair.M());
 					hMassvsCosDelta_Phi_Psi2_ULS[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 					hpTvsDelta_Phi_Psi2_ULS[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1010,7 +1010,7 @@ void makeRealPairs()
 					if(phi < 0) phi = phi+TMath::Pi();
 					deltaphi = phi -finalEventPlane;
 					if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
-					if(deltaphi < TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
+					if(deltaphi > TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
 					hMassvsDelta_Phi_Psi2_LSPos[cenBufferPointer]->Fill(deltaphi,pair.M());
 					hMassvsCosDelta_Phi_Psi2_LSPos[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 					hpTvsDelta_Phi_Psi2_LSPos[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1078,7 +1078,7 @@ void makeRealPairs()
 					if(phi < 0) phi = phi+TMath::Pi();
 					deltaphi = phi -finalEventPlane;
 					if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
-					if(deltaphi < TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
+					if(deltaphi > TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
 					hMassvsDelta_Phi_Psi2_LSNeg[cenBufferPointer]->Fill(deltaphi,pair.M());
 					hMassvsCosDelta_Phi_Psi2_LSNeg[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 					hpTvsDelta_Phi_Psi2_LSNeg[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1139,7 +1139,7 @@ void makeMixPairs()
 							if(phi < 0) phi = phi+TMath::Pi();
 							deltaphi = phi -finalEventPlane;
 							if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
-							if(deltaphi < TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
+							if(deltaphi > TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
 							hMassvsDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(deltaphi,pair.M());
 							hMassvsCosDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 							hpTvsDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1193,7 +1193,7 @@ void makeMixPairs()
 							if(phi < 0) phi = phi+TMath::Pi();
 							deltaphi = phi -finalEventPlane;
 							if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
-							if(deltaphi < TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
+							if(deltaphi > TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
 							hMassvsDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(deltaphi,pair.M());
 							hMassvsCosDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 							hpTvsDelta_Phi_Psi2_Mix_ULS[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1250,7 +1250,7 @@ void makeMixPairs()
 						if(phi < 0) phi = phi+TMath::Pi();
 						deltaphi = phi -finalEventPlane;
 						if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
-						if(deltaphi < TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
+						if(deltaphi > TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
 						hMassvsDelta_Phi_Psi2_Mix_LSPos[cenBufferPointer]->Fill(deltaphi,pair.M());
 						hMassvsCosDelta_Phi_Psi2_Mix_LSPos[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 						hpTvsDelta_Phi_Psi2_Mix_LSPos[cenBufferPointer]->Fill(deltaphi,pair.Pt());
@@ -1305,7 +1305,7 @@ void makeMixPairs()
 						if(phi < 0) phi = phi+TMath::Pi();
 						deltaphi = phi -finalEventPlane;
 						if(deltaphi < 0) deltaphi = deltaphi+TMath::Pi();
-						if(deltaphi < TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
+						if(deltaphi > TMath::Pi()/2) deltaphi = TMath::Pi()-deltaphi;
 						hMassvsDelta_Phi_Psi2_Mix_LSNeg[cenBufferPointer]->Fill(deltaphi,pair.M());
 						hMassvsCosDelta_Phi_Psi2_Mix_LSNeg[cenBufferPointer]->Fill(cos(2*deltaphi),pair.M());
 						hpTvsDelta_Phi_Psi2_Mix_LSNeg[cenBufferPointer]->Fill(deltaphi,pair.Pt());
