@@ -2316,9 +2316,9 @@ void bookHistograms()
 	Int_t nCosThetaBins = 20;
 	Double_t CosthetaLow = -1;
 	Double_t CosthetaHig = 1;
-	Int nPhiBins = 40;
-	Double PhiLow = -TMath::Pi()-0.01;
-	Double PhiHig = TMath::Pi()+0.01;
+	Int_t nPhiBins = 40;
+	Double_t PhiLow = -TMath::Pi()-0.01;
+	Double_t PhiHig = TMath::Pi()+0.01;
 
 	hPairCosThetaInvMPt = new TH3F("hPairCosThetaInvMPt","hPairCosThetaInvMPt",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
 	hPairCosThetaInvMPtBG= new TH3F("hPairCosThetaInvMPtBG","hPairCosThetaInvMPtBG",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
