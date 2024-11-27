@@ -75,6 +75,7 @@ class StMiniTreeMaker : public StMaker {
 		void     setPrintCpu(const Bool_t pCpu);
 		void     setPrintConfig(const Bool_t print);
 		void     setTriggerID(const int triggerID);
+		double   GetTPCPhiWeight(double phi, double eta, int cent);
 
 	protected:
 		void     printConfig();
@@ -174,6 +175,7 @@ class StMiniTreeMaker : public StMaker {
 		TH2D           *hnTOFMatchvsRefmult;
 		// TH3D           *hPrimaryTrackPhiVsEta;
 		TH2D          *hPrimaryTrackPhiVsEta[9];
+		TH2D          *hCalPhiWeightHisto[9];
 		// TH2D           *hEVzvsVx;
 		// TH2D           *hEVzvsVy;
 		//checking the electron origin  

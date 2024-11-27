@@ -48,6 +48,14 @@ Int_t StMiniTreeMaker::Init()
 	PileupLowlimit->SetParameters(-6.33246e+00,7.90568e-02,3.03279e-02,-5.03738e-04,3.82206e-06,-1.30813e-08,1.64832e-11);
 	PileupLimit = new TF1("PileupLimit","[0]*x-[1]",0,1000);
 	PileupLimit->SetParameters(0.7,10);
+	// TFile* f_weight = new TFile("weight.root","read");
+	// for (size_t i = 0; i < 9; i++)
+	// {
+	// 	hCalPhiWeightHisto[i] = (TH2D*)f_weight->Get(Form("hPrimaryTrackPhiVsEta_Cent%d",i));
+	// }
+	// f_weight->Close();
+	// f_weight->Delete();
+	
 
 	return kStOK;
 }
@@ -354,11 +362,26 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 	return kTRUE;
 }
 //_____________________________________________________________________________
+double   StMiniTreeMaker::GetTPCPhiWeight(double phi, double eta, int cent)
+{
+	//function to return inverse phi weight for 2nd order TPC EP
+	int TotPhiBins = mTPCPhiWeightInput[cent]->GetXaxis()->GetNbins();
+	double BinPhi = mTPCPhiWeightInput[cent]->GetXaxis()->FindBin(phi);
+	double BinEta = mTPCPhiWeightInput[cent]->GetYaxis()->FindBin(eta);
+	double BinEntries = mTPCPhiWeightInput[cent]->GetBinContent(BinPhi, BinEta);; //assume this histogram has already been scaled by 1/integral
+	double EtaBandEntries = mTPCPhiWeightInput[cent]->Integral(1, TotPhiBins, BinEta, BinEta)/TotPhiBins;//Average value in each Eta band
+	double ratio = EtaBandEntries/BinEntries;
+
+  return ratio;
+}
+//_____________________________________________________________________________
 void StMiniTreeMaker::calQxQy(StPicoTrack *pTrack, TVector3 vtxPos) const
 {
 	Float_t pt  = pTrack->pMom().Perp();
 	Float_t eta = pTrack->pMom().PseudoRapidity();
 	Float_t phi = pTrack->pMom().Phi();
+	// if (phi < 0) phi += 2*TMath::Pi();
+	
 	//Float_t dca = pTrack->dca();
 	//Float_t dca = (pTrack->dca()-vtxPos).mag();
 	Float_t dca = pTrack->gDCA(vtxPos).Mag();
@@ -561,7 +584,7 @@ void StMiniTreeMaker::bookHistos()
 	// hPrimaryTrackPhiVsEta = new TH3D("hPrimaryTrackPhiVsEtavsCent","hPrimaryTrackPhiVsEtavsCent; #phi; #eta; Centrality", 20,0.,2.*pi,60,-1.5,1.5,16,0,16);
 	for (int i = 0; i < 9; i++)
 	{
-		hPrimaryTrackPhiVsEta[i] = new TH2D(Form("hPrimaryTrackPhiVsEta_Cent%d",i),"hPrimaryTrackPhiVsEta; #eta; #phi", 60,-1.5,1.5,20,0.,2.*pi);
+		hPrimaryTrackPhiVsEta[i] = new TH2D(Form("hPrimaryTrackPhiVsEta_Cent%d",i),"hPrimaryTrackPhiVsEta; #eta; #phi", 60,-1.5,1.5,20,-TMath::Pi().,TMath::Pi());
 	}
 	
 	
