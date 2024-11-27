@@ -368,7 +368,7 @@ void StMiniTreeMaker::calQxQy(StPicoTrack *pTrack, TVector3 vtxPos) const
 	if(pTrack->nHitsFit()<15)                         return;
 	if(pTrack->nHitsFit()*1./pTrack->nHitsMax()<0.52) return;
 	if(dca>1.)                                        return;
-	hPrimaryTrackPhiVsEta->Fill(eta,phi,mEvtData.mCentrality);
+	hPrimaryTrackPhiVsEta[mEvtData.mCentrality]->Fill(eta,phi);
 
 	Double_t mCosPart = pt*TMath::Cos(2.*phi);
 	Double_t mSinPart = pt*TMath::Sin(2.*phi);
