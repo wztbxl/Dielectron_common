@@ -2312,7 +2312,7 @@ void bookHistograms()
 	ptHi      = 5;
 	nMassBins = 100;
 	massLow   = 0;
-	massHi    = 4
+	massHi    = 4;
 	Int_t nCosThetaBins = 20;
 	Double_t CosthetaLow = -1;
 	Double_t CosthetaHig = 1;
