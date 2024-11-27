@@ -271,6 +271,7 @@ TH1D* hPt_Electron;
 TH1D* hPt_Positron;
 
 //histograms for the polarization
+// this part is for the thermal dielectron polarization it self, you need to think how to save the memory
 TH2F* hPairPhiPt;
 TH2F* hPairPhiPtBG;
 TH2F* hPairCosThetaPt;
@@ -2145,12 +2146,12 @@ void bookHistograms()
 	hRunID = new TH1D("hRunID",";RunID;nCounts",214990,21030025,21245015);
 	hTriggerID = new TH1D("hTriggerID",";Trigger ID;nCounts",4,780000-1,780040-1);
 
-	const Int_t    nPtBins   = 100;
-	const Double_t ptLow     = 0;
-	const Double_t ptHi      = 5;
-	const Int_t    nMassBins = 400;
-	const Double_t massLow   = 0;
-	const Double_t massHi    = 4;
+	Int_t    nPtBins   = 100;
+	Double_t ptLow     = 0;
+	Double_t ptHi      = 5;
+	Int_t    nMassBins = 400;
+	Double_t massLow   = 0;
+	Double_t massHi    = 4;
 
 	//eventPlane
 	hRawEventPlane = new TH1F("hRawEventPlane","hRawEventPlane;Reaction Plane (rad); Counts",300,0,TMath::Pi());
@@ -2219,26 +2220,26 @@ void bookHistograms()
 		hCosPsi2_Mix_LSPos_pT[i] = new TProfile(Form("hCosPsi2_Mix_LSPos_pT_cent%d",i),Form("hCosPsi2_Mix_LSPos_pT_cent%d;M_{ee};<cos(2(#phi-#Psi_{2}))>",i),nMassBins,massLow,massHi);
 		hCosPsi2_Mix_LSNeg_pT[i] = new TProfile(Form("hCosPsi2_Mix_LSNeg_pT_cent%d",i),Form("hCosPsi2_Mix_LSNeg_pT_cent%d;M_{ee};<cos(2(#phi-#Psi_{2}))>",i),nMassBins,massLow,massHi);
 
-		hMassvsDelta_Phi_Psi2_ULS[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_ULS_cent%d",i),Form("hMassvsDelta_Phi_Psi2_ULS_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nMassBins,massLow,massHi);
-		hMassvsDelta_Phi_Psi2_LSPos[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_LSPos_cent%d",i),Form("hMassvsDelta_Phi_Psi2_LSPos_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nMassBins,massLow,massHi);
-		hMassvsDelta_Phi_Psi2_LSNeg[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_LSNeg_cent%d",i),Form("hMassvsDelta_Phi_Psi2_LSNeg_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nMassBins,massLow,massHi);
-		hMassvsDelta_Phi_Psi2_Mix_ULS[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_Mix_ULS_cent%d",i),Form("hMassvsDelta_Phi_Psi2_Mix_ULS_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nMassBins,massLow,massHi);
-		hMassvsDelta_Phi_Psi2_Mix_LSPos[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_Mix_LSPos_cent%d",i),Form("hMassvsDelta_Phi_Psi2_Mix_LSPos_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nMassBins,massLow,massHi);
-		hMassvsDelta_Phi_Psi2_Mix_LSNeg[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_Mix_LSNeg_cent%d",i),Form("hMassvsDelta_Phi_Psi2_Mix_LSNeg_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nMassBins,massLow,massHi);
+		hMassvsDelta_Phi_Psi2_ULS[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_ULS_cent%d",i),Form("hMassvsDelta_Phi_Psi2_ULS_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),360,0,TMath::Pi()+0.1,nMassBins,massLow,massHi);
+		hMassvsDelta_Phi_Psi2_LSPos[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_LSPos_cent%d",i),Form("hMassvsDelta_Phi_Psi2_LSPos_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),360,0,TMath::Pi()+0.1,nMassBins,massLow,massHi);
+		hMassvsDelta_Phi_Psi2_LSNeg[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_LSNeg_cent%d",i),Form("hMassvsDelta_Phi_Psi2_LSNeg_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),360,0,TMath::Pi()+0.1,nMassBins,massLow,massHi);
+		hMassvsDelta_Phi_Psi2_Mix_ULS[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_Mix_ULS_cent%d",i),Form("hMassvsDelta_Phi_Psi2_Mix_ULS_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),360,0,TMath::Pi()+0.1,nMassBins,massLow,massHi);
+		hMassvsDelta_Phi_Psi2_Mix_LSPos[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_Mix_LSPos_cent%d",i),Form("hMassvsDelta_Phi_Psi2_Mix_LSPos_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),360,0,TMath::Pi()+0.1,nMassBins,massLow,massHi);
+		hMassvsDelta_Phi_Psi2_Mix_LSNeg[i] = new TH2D(Form("hMassvsDelta_Phi_Psi2_Mix_LSNeg_cent%d",i),Form("hMassvsDelta_Phi_Psi2_Mix_LSNeg_cent%d; #phi-#Psi_{2}; M_{ee} (GeV/c^{2})",i),360,0,TMath::Pi()+0.1,nMassBins,massLow,massHi);
 
-		hMassvsCosDelta_Phi_Psi2_ULS[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_ULS_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_ULS_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),200,-2,2,nMassBins,massLow,massHi);
-		hMassvsCosDelta_Phi_Psi2_LSPos[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_LSPos_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_LSPos_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),200,-2,2,nMassBins,massLow,massHi);
-		hMassvsCosDelta_Phi_Psi2_LSNeg[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_LSNeg_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_LSNeg_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),200,-2,2,nMassBins,massLow,massHi);
-		hMassvsCosDelta_Phi_Psi2_Mix_ULS[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_Mix_ULS_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_Mix_ULS_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),200,-2,2,nMassBins,massLow,massHi);
-		hMassvsCosDelta_Phi_Psi2_Mix_LSPos[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_Mix_LSPos_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_Mix_LSPos_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),200,-2,2,nMassBins,massLow,massHi);
-		hMassvsCosDelta_Phi_Psi2_Mix_LSNeg[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_Mix_LSNeg_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_Mix_LSNeg_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),200,-2,2,nMassBins,massLow,massHi);
+		hMassvsCosDelta_Phi_Psi2_ULS[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_ULS_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_ULS_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),105,-1.05,1.05,nMassBins,massLow,massHi);
+		hMassvsCosDelta_Phi_Psi2_LSPos[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_LSPos_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_LSPos_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),105,-1.05,1.05,nMassBins,massLow,massHi);
+		hMassvsCosDelta_Phi_Psi2_LSNeg[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_LSNeg_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_LSNeg_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),105,-1.05,1.05,nMassBins,massLow,massHi);
+		hMassvsCosDelta_Phi_Psi2_Mix_ULS[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_Mix_ULS_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_Mix_ULS_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),105,-1.05,1.05,nMassBins,massLow,massHi);
+		hMassvsCosDelta_Phi_Psi2_Mix_LSPos[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_Mix_LSPos_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_Mix_LSPos_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),105,-1.05,1.05,nMassBins,massLow,massHi);
+		hMassvsCosDelta_Phi_Psi2_Mix_LSNeg[i] = new TH2D(Form("hMassvsCosDelta_Phi_Psi2_Mix_LSNeg_cent%d",i),Form("hMassvsCosDelta_Phi_Psi2_Mix_LSNeg_cent%d; cos[2*(#phi-#Psi_{2})]; M_{ee} (GeV/c^{2})",i),105,-1.05,1.05,nMassBins,massLow,massHi);
 
-		hpTvsDelta_Phi_Psi2_ULS[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_ULS_cent%d",i),Form("hpTvsDelta_Phi_Psi2_ULS_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
-		hpTvsDelta_Phi_Psi2_LSPos[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_LSPos_cent%d",i),Form("hpTvsDelta_Phi_Psi2_LSPos_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
-		hpTvsDelta_Phi_Psi2_LSNeg[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_LSNeg_cent%d",i),Form("hpTvsDelta_Phi_Psi2_LSNeg_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
-		hpTvsDelta_Phi_Psi2_Mix_ULS[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_Mix_ULS_cent%d",i),Form("hpTvsDelta_Phi_Psi2_Mix_ULS_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
-		hpTvsDelta_Phi_Psi2_Mix_LSPos[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_Mix_LSPos_cent%d",i),Form("hpTvsDelta_Phi_Psi2_Mix_LSPos_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
-		hpTvsDelta_Phi_Psi2_Mix_LSNeg[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_Mix_LSNeg_cent%d",i),Form("hpTvsDelta_Phi_Psi2_Mix_LSNeg_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),1200,-2*TMath::Pi()-0.1,2*TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
+		hpTvsDelta_Phi_Psi2_ULS[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_ULS_cent%d",i),Form("hpTvsDelta_Phi_Psi2_ULS_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),360,0,TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
+		hpTvsDelta_Phi_Psi2_LSPos[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_LSPos_cent%d",i),Form("hpTvsDelta_Phi_Psi2_LSPos_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),360,0,TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
+		hpTvsDelta_Phi_Psi2_LSNeg[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_LSNeg_cent%d",i),Form("hpTvsDelta_Phi_Psi2_LSNeg_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),360,0,TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
+		hpTvsDelta_Phi_Psi2_Mix_ULS[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_Mix_ULS_cent%d",i),Form("hpTvsDelta_Phi_Psi2_Mix_ULS_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),360,0,TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
+		hpTvsDelta_Phi_Psi2_Mix_LSPos[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_Mix_LSPos_cent%d",i),Form("hpTvsDelta_Phi_Psi2_Mix_LSPos_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),360,0,TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
+		hpTvsDelta_Phi_Psi2_Mix_LSNeg[i] = new TH2D(Form("hpTvsDelta_Phi_Psi2_Mix_LSNeg_cent%d",i),Form("hpTvsDelta_Phi_Psi2_Mix_LSNeg_cent%d; #phi-#Psi_{2}; p_{T} (GeV/c)",i),360,0,TMath::Pi()+0.1,nPtBins,ptLow,ptHi);
 	}
 	hCosPsi2_total = new TProfile("hCosPsi2_cent_total","hCosPsi2_cent_total; M_{ee};<cos(2(#phi-#Psi_{2}))>",nMassBins,massLow,massHi);
 
@@ -2306,35 +2307,48 @@ void bookHistograms()
 	hPairPhiPtCSBG = new TH2F("hPairPhiPtCSBG","Pair Pt vs #phi;#phi;Pair Pt",10,-TMath::Pi(),TMath::Pi(),120,0,30);
 	hPairPhiPtCSBG->Sumw2();
 
-	hPairCosThetaInvMPt = new TH3F("hPairCosThetaInvMPt","hPairCosThetaInvMPt",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtBG= new TH3F("hPairCosThetaInvMPtBG","hPairCosThetaInvMPtBG",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtBG_LSNeg= new TH3F("hPairCosThetaInvMPtBG_LSNeg","hPairCosThetaInvMPtBG_LSNeg",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtBG_LSPos= new TH3F("hPairCosThetaInvMPtBG_LSPos","hPairCosThetaInvMPtBG_LSPos",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtBG_MixULS= new TH3F("hPairCosThetaInvMPtBG_MixULS","hPairCosThetaInvMPtBG_MixULS",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtBG_MixLSPos= new TH3F("hPairCosThetaInvMPtBG_MixLSPos","hPairCosThetaInvMPtBG_MixLSPos",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtBG_MixLSNeg= new TH3F("hPairCosThetaInvMPtBG_MixLSNeg","hPairCosThetaInvMPtBG_MixLSNeg",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtCS= new TH3F("hPairCosThetaInvMPtCS","hPairCosThetaInvMPtCS",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtCSBG= new TH3F("hPairCosThetaInvMPtCSBG","hPairCosThetaInvMPtCSBG",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtCSBG_LSNeg= new TH3F("hPairCosThetaInvMPtCSBG_LSNeg","hPairCosThetaInvMPtCSBG_LSNeg",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtCSBG_LSPos= new TH3F("hPairCosThetaInvMPtCSBG_LSPos","hPairCosThetaInvMPtCSBG_LSPos",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtCSBG_MixULS= new TH3F("hPairCosThetaInvMPtCSBG_MixULS","hPairCosThetaInvMPtCSBG_MixULS",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtCSBG_MixLSPos= new TH3F("hPairCosThetaInvMPtCSBG_MixLSPos","hPairCosThetaInvMPtCSBG_MixLSPos",20,-1,1,300,0,3,50,0,5);
-	hPairCosThetaInvMPtCSBG_MixLSNeg= new TH3F("hPairCosThetaInvMPtCSBG_MixLSNeg","hPairCosThetaInvMPtCSBG_MixLSNeg",20,-1,1,300,0,3,50,0,5);
+	nPtBins   = 50;
+	ptLow     = 0;
+	ptHi      = 5;
+	nMassBins = 100;
+	massLow   = 0;
+	massHi    = 4
+	Int_t nCosThetaBins = 20;
+	Double_t CosthetaLow = -1;
+	Double_t CosthetaHig = 1;
+	Int nPhiBins = 40;
+	Double PhiLow = -TMath::Pi()-0.01;
+	Double PhiHig = TMath::Pi()+0.01;
 
-	hPairPhiInvMPt = new TH3F("hPairPhiInvMPt","hPairPhiInvMPt",40,-TMath::Pi(),TMath::Pi(),300,0,3,50,0,5);
-	hPairPhiInvMPtBG = new TH3F("hPairPhiInvMPtBG","hPairPhiInvMPtBG",40,-TMath::Pi(),TMath::Pi(),300,0,3,50,0,5);
-	hPairPhiInvMPtBG_LSNeg= new TH3F("hPairPhiInvMPtBG_LSNeg","hPairPhiInvMPtBG_LSNeg",20,-1,1,300,0,3,50,0,5);
-	hPairPhiInvMPtBG_LSPos= new TH3F("hPairPhiInvMPtBG_LSPos","hPairPhiInvMPtBG_LSPos",20,-1,1,300,0,3,50,0,5);
-	hPairPhiInvMPtBG_MixULS= new TH3F("hPairPhiInvMPtBG_MixULS","hPairPhiInvMPtBG_MixULS",20,-1,1,300,0,3,50,0,5);
-	hPairPhiInvMPtBG_MixLSPos= new TH3F("hPairPhiInvMPtBG_MixLSPos","hPairPhiInvMPtBG_MixLSPos",20,-1,1,300,0,3,50,0,5);
-	hPairPhiInvMPtBG_MixLSNeg= new TH3F("hPairPhiInvMPtBG_MixLSNeg","hPairPhiInvMPtBG_MixLSNeg",20,-1,1,300,0,3,50,0,5);
-	hPairPhiInvMPtCS = new TH3F("hPairPhiInvMPtCS","hPairPhiInvMPtCS",40,-TMath::Pi(),TMath::Pi(),300,0,3,50,0,5);
-	hPairPhiInvMPtCSBG = new TH3F("hPairPhiInvMPtCSBG","hPairPhiInvMPtCSBG",40,-TMath::Pi(),TMath::Pi(),300,0,3,50,0,5);
-	hPairPhiInvMPtCSBG_LSNeg= new TH3F("hPairPhiInvMPtCSBG_LSNeg","hPairPhiInvMPtCSBG_LSNeg",20,-1,1,300,0,3,50,0,5);
-	hPairPhiInvMPtCSBG_LSPos= new TH3F("hPairPhiInvMPtCSBG_LSPos","hPairPhiInvMPtCSBG_LSPos",20,-1,1,300,0,3,50,0,5);
-	hPairPhiInvMPtCSBG_MixULS= new TH3F("hPairPhiInvMPtCSBG_MixULS","hPairPhiInvMPtCSBG_MixULS",20,-1,1,300,0,3,50,0,5);
-	hPairPhiInvMPtCSBG_MixLSPos= new TH3F("hPairPhiInvMPtCSBG_MixLSPos","hPairPhiInvMPtCSBG_MixLSPos",20,-1,1,300,0,3,50,0,5);
-	hPairPhiInvMPtCSBG_MixLSNeg= new TH3F("hPairPhiInvMPtCSBG_MixLSNeg","hPairPhiInvMPtCSBG_MixLSNeg",20,-1,1,300,0,3,50,0,5);
+	hPairCosThetaInvMPt = new TH3F("hPairCosThetaInvMPt","hPairCosThetaInvMPt",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtBG= new TH3F("hPairCosThetaInvMPtBG","hPairCosThetaInvMPtBG",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtBG_LSNeg= new TH3F("hPairCosThetaInvMPtBG_LSNeg","hPairCosThetaInvMPtBG_LSNeg",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtBG_LSPos= new TH3F("hPairCosThetaInvMPtBG_LSPos","hPairCosThetaInvMPtBG_LSPos",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtBG_MixULS= new TH3F("hPairCosThetaInvMPtBG_MixULS","hPairCosThetaInvMPtBG_MixULS",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtBG_MixLSPos= new TH3F("hPairCosThetaInvMPtBG_MixLSPos","hPairCosThetaInvMPtBG_MixLSPos",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtBG_MixLSNeg= new TH3F("hPairCosThetaInvMPtBG_MixLSNeg","hPairCosThetaInvMPtBG_MixLSNeg",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtCS= new TH3F("hPairCosThetaInvMPtCS","hPairCosThetaInvMPtCS",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtCSBG= new TH3F("hPairCosThetaInvMPtCSBG","hPairCosThetaInvMPtCSBG",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtCSBG_LSNeg= new TH3F("hPairCosThetaInvMPtCSBG_LSNeg","hPairCosThetaInvMPtCSBG_LSNeg",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtCSBG_LSPos= new TH3F("hPairCosThetaInvMPtCSBG_LSPos","hPairCosThetaInvMPtCSBG_LSPos",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtCSBG_MixULS= new TH3F("hPairCosThetaInvMPtCSBG_MixULS","hPairCosThetaInvMPtCSBG_MixULS",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtCSBG_MixLSPos= new TH3F("hPairCosThetaInvMPtCSBG_MixLSPos","hPairCosThetaInvMPtCSBG_MixLSPos",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairCosThetaInvMPtCSBG_MixLSNeg= new TH3F("hPairCosThetaInvMPtCSBG_MixLSNeg","hPairCosThetaInvMPtCSBG_MixLSNeg",nCosThetaBins,CosthetaLow,CosthetaHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+
+	hPairPhiInvMPt = new TH3F("hPairPhiInvMPt","hPairPhiInvMPt",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtBG = new TH3F("hPairPhiInvMPtBG","hPairPhiInvMPtBG",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtBG_LSNeg= new TH3F("hPairPhiInvMPtBG_LSNeg","hPairPhiInvMPtBG_LSNeg",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtBG_LSPos= new TH3F("hPairPhiInvMPtBG_LSPos","hPairPhiInvMPtBG_LSPos",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtBG_MixULS= new TH3F("hPairPhiInvMPtBG_MixULS","hPairPhiInvMPtBG_MixULS",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtBG_MixLSPos= new TH3F("hPairPhiInvMPtBG_MixLSPos","hPairPhiInvMPtBG_MixLSPos",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtBG_MixLSNeg= new TH3F("hPairPhiInvMPtBG_MixLSNeg","hPairPhiInvMPtBG_MixLSNeg",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtCS = new TH3F("hPairPhiInvMPtCS","hPairPhiInvMPtCS",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtCSBG = new TH3F("hPairPhiInvMPtCSBG","hPairPhiInvMPtCSBG",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtCSBG_LSNeg= new TH3F("hPairPhiInvMPtCSBG_LSNeg","hPairPhiInvMPtCSBG_LSNeg",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtCSBG_LSPos= new TH3F("hPairPhiInvMPtCSBG_LSPos","hPairPhiInvMPtCSBG_LSPos",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtCSBG_MixULS= new TH3F("hPairPhiInvMPtCSBG_MixULS","hPairPhiInvMPtCSBG_MixULS",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtCSBG_MixLSPos= new TH3F("hPairPhiInvMPtCSBG_MixLSPos","hPairPhiInvMPtCSBG_MixLSPos",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
+	hPairPhiInvMPtCSBG_MixLSNeg= new TH3F("hPairPhiInvMPtCSBG_MixLSNeg","hPairPhiInvMPtCSBG_MixLSNeg",nPhiBins,PhiLow,PhiHig,nMassBins,massLow,massHi,nPtBins,ptLow,ptHi);
 
 	hPairCosThetaInvMPt->Sumw2();
 	hPairCosThetaInvMPtBG->Sumw2();
@@ -2346,13 +2360,13 @@ void bookHistograms()
 	hPairPhiInvMPtCS->Sumw2();
 	hPairPhiInvMPtCSBG->Sumw2();
 
-	hPairCosThetaPhiPt = new TH3F("hPairCosThetaPhiPt","hPairCosThetaPhiPt;cos#theta;#phi;p_{T}",20,-1,1,40,-TMath::Pi(),TMath::Pi(),50,0,5);
-	hPairCosThetaPhiPtBG = new TH3F("hPairCosThetaPhiPtBG","hPairCosThetaPhiPtBG;cos#theta;#phi;p_{T}",20,-1,1,40,-TMath::Pi(),TMath::Pi(),50,0,5);
+	hPairCosThetaPhiPt = new TH3F("hPairCosThetaPhiPt","hPairCosThetaPhiPt;cos#theta;#phi;p_{T}",nCosThetaBins,CosthetaLow,CosthetaHig,nPhiBins,PhiLow,PhiHig,nPtBins,ptLow,ptHi);
+	hPairCosThetaPhiPtBG = new TH3F("hPairCosThetaPhiPtBG","hPairCosThetaPhiPtBG;cos#theta;#phi;p_{T}",nCosThetaBins,CosthetaLow,CosthetaHig,nPhiBins,PhiLow,PhiHig,nPtBins,ptLow,ptHi);
 	hPairCosThetaPhiPt->Sumw2();
 	hPairCosThetaPhiPtBG->Sumw2();
 
-	hPairCosThetaPhiPtCS = new TH3F("hPairCosThetaPhiPtCS","hPairCosThetaPhiPtCS;cos#theta;#phi;p_{T}",20,-1,1,40,-TMath::Pi(),TMath::Pi(),50,0,5);
-	hPairCosThetaPhiPtCSBG = new TH3F("hPairCosThetaPhiPtCSBG","hPairCosThetaPhiPtCSBG;cos#theta;#phi;p_{T}",20,-1,1,40,-TMath::Pi(),TMath::Pi(),50,0,5);
+	hPairCosThetaPhiPtCS = new TH3F("hPairCosThetaPhiPtCS","hPairCosThetaPhiPtCS;cos#theta;#phi;p_{T}",nCosThetaBins,CosthetaLow,CosthetaHig,nPhiBins,PhiLow,PhiHig,nPtBins,ptLow,ptHi);
+	hPairCosThetaPhiPtCSBG = new TH3F("hPairCosThetaPhiPtCSBG","hPairCosThetaPhiPtCSBG;cos#theta;#phi;p_{T}",nCosThetaBins,CosthetaLow,CosthetaHig,nPhiBins,PhiLow,PhiHig,nPtBins,ptLow,ptHi);
 	hPairCosThetaPhiPtCS->Sumw2();
 	hPairCosThetaPhiPtCSBG->Sumw2();
 
