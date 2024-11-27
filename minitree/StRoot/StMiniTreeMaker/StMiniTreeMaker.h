@@ -172,6 +172,7 @@ class StMiniTreeMaker : public StMaker {
 		TH2D           *hEPhivsPt;
 		TH3D           *hEVxvsVyvsVz;
 		TH2D           *hnTOFMatchvsRefmult;
+		TH3D           *hPrimaryTrackPhiVsEta;
 		// TH2D           *hEVzvsVx;
 		// TH2D           *hEVzvsVy;
 		//checking the electron origin  

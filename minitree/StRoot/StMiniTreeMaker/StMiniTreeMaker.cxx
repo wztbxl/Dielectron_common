@@ -368,6 +368,7 @@ void StMiniTreeMaker::calQxQy(StPicoTrack *pTrack, TVector3 vtxPos) const
 	if(pTrack->nHitsFit()<15)                         return;
 	if(pTrack->nHitsFit()*1./pTrack->nHitsMax()<0.52) return;
 	if(dca>1.)                                        return;
+	hPrimaryTrackPhiVsEta->Fill(eta,phi,mEvtData.mCentrality);
 
 	Double_t mCosPart = pt*TMath::Cos(2.*phi);
 	Double_t mSinPart = pt*TMath::Sin(2.*phi);
@@ -557,6 +558,7 @@ void StMiniTreeMaker::bookHistos()
 	hEPhivsPt = new TH2D("hEPhivsPt","hEPhivsPt; #phi; p_{T} (GeV/c)",600,-3.2,3.2,500,0,10);
 	hEVxvsVyvsVz = new TH3D("hEVxvsVyvsVz","hEVxvsVyvsVz; Vx (cm); Vy(cm); Vz(cm)", 200,-5,5,200,-5,5,800,200,-200);
 	hnTOFMatchvsRefmult = new TH2D("hnTOFMatchvsRefmult","hnTOFMatchvsRefmult; nTofMatch; Refmult",500,0-minDiff,500+minDiff,500,0-minDiff,500+minDiff);
+	hPrimaryTrackPhiVsEta = new TH3D("hPrimaryTrackPhiVsEtavsCent","hPrimaryTrackPhiVsEtavsCent; #phi; #eta; Centrality", 20,0.,2.*pi,60,-1.5,1.5,16,0,16);
 	
 	// hEVzvsVx = new TH2D("hEVzvsVx","hEVzvsVx;Vz (cm), Vx(cm)", 800,-200,200,600,-3,3);
 	// hEVzvsVy = new TH2D("hEVzvsVy","hEVzvsVy;Vz (cm), Vy(cm)", 800,-200,200,600,-3,3);
