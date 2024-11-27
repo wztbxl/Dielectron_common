@@ -584,7 +584,7 @@ void StMiniTreeMaker::bookHistos()
 	// hPrimaryTrackPhiVsEta = new TH3D("hPrimaryTrackPhiVsEtavsCent","hPrimaryTrackPhiVsEtavsCent; #phi; #eta; Centrality", 20,0.,2.*pi,60,-1.5,1.5,16,0,16);
 	for (int i = 0; i < 9; i++)
 	{
-		hPrimaryTrackPhiVsEta[i] = new TH2D(Form("hPrimaryTrackPhiVsEta_Cent%d",i),"hPrimaryTrackPhiVsEta; #eta; #phi", 60,-1.5,1.5,20,-TMath::Pi().,TMath::Pi());
+		hPrimaryTrackPhiVsEta[i] = new TH2D(Form("hPrimaryTrackPhiVsEta_Cent%d",i),"hPrimaryTrackPhiVsEta; #eta; #phi", 60,-1.5,1.5,20,-TMath::Pi(),TMath::Pi());
 	}
 	
 	
