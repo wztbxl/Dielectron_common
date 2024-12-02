@@ -210,6 +210,7 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 	mEvtData.mGRefMultCorr = mRefMultCorr->getRefMultCorr();
 	mEvtData.mEvtWeight = mRefMultCorr->getWeight();
 	mEvtData.mCentrality = mRefMultCorr->getCentralityBin9();//9 Centrality bin
+	hCalPhiWeightHisto[mEvtData.mCentrality]->Print();
 	
 	hGRefMultvsGRefMultCorr->Fill(mEvtData.mGRefMultCorr,mEvtData.mRefMult);
 
