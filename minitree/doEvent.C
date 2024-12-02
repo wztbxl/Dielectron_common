@@ -136,7 +136,7 @@ void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TStrin
 	if (nRound == 1)
 	{
 		miniTreeMaker->setPhiWeightFlag(1);
-		miniTreeMaker->setPhiWeightFile(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/PhiWeight.root",Energy.Data()));
+		miniTreeMaker->setPhiWeightFile(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/PhiWeight/PhiWeight.root",Energy.Data()));
 	}
 
 	if(debug)
