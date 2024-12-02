@@ -400,6 +400,8 @@ double   StMiniTreeMaker::GetTPCPhiWeight(double phi, double eta, int cent)
 	//function to return inverse phi weight for 2nd order TPC EP
 	if(Debug()){
 		LOG_INFO<<"before calculate Phi weight"<<endm;
+		cout << "phi: " << phi << " eta: " << eta << " cent: " << cent << endl;
+		
 		hCalPhiWeightHisto[cent]->Print();
 		}
 	int TotPhiBins = hCalPhiWeightHisto[cent]->GetYaxis()->GetNbins();
