@@ -59,7 +59,7 @@ Int_t StMiniTreeMaker::Init()
 		for (size_t i = 0; i < 9; i++)
 		{
 			hCalPhiWeightHisto[i] = (TH2D*)f_weight->Get(Form("hPrimaryTrackPhiVsEta_Cent%d",i));
-			hCalPhiWeightHisto[cent]->Print();
+			hCalPhiWeightHisto[i]->Print();
 		}
 		f_weight->Close();
 		f_weight->Delete();
