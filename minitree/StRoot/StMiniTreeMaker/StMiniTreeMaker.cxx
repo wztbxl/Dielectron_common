@@ -488,10 +488,10 @@ Bool_t StMiniTreeMaker::isValidTrack(StPicoTrack *pTrack, TVector3 vtxPos) const
 	//Float_t dca = (pTrack->dca()-vtxPos).mag();
 	Float_t dca = (pTrack->gDCA(vtxPos)).Mag();
 
-	cout << "pt: " << pt << endl;
-	cout << "eta: " << eta << endl;
-	cout << "dca: " << dca << endl;
-	cout << pTrack << endl;
+	// cout << "pt: " << pt << endl;
+	// cout << "eta: " << eta << endl;
+	// cout << "dca: " << dca << endl;
+	// cout << pTrack << endl;
 	if(pt<mMinTrkPt)                            return kFALSE;
 	if(TMath::Abs(eta)>mMaxTrkEta)              return kFALSE;
 	if(pTrack->nHitsFit()<mMinNHitsFit)         return kFALSE;
