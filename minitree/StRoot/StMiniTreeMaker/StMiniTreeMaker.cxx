@@ -404,6 +404,9 @@ double   StMiniTreeMaker::GetTPCPhiWeight(double phi, double eta, int cent)
 	double BinPhi = hCalPhiWeightHisto[cent]->GetYaxis()->FindBin(phi);
 	double BinEta = hCalPhiWeightHisto[cent]->GetXaxis()->FindBin(eta);
 	double BinEntries = hCalPhiWeightHisto[cent]->GetBinContent(BinEta, BinPhi);; //assume this histogram has already been scaled by 1/integral
+	if(Debug()){
+		cout << "totPhiBins: " << TotPhiBins << " BinPhi: " << BinPhi << " BinEta: " << BinEta << " BinEntries: " << BinEntries << endl;
+		}
 	double EtaBandEntries = hCalPhiWeightHisto[cent]->Integral(1, TotPhiBins, BinEta, BinEta)/TotPhiBins;//Average value in each Eta band
 	double ratio = EtaBandEntries/BinEntries;
 	if(Debug()){
