@@ -275,15 +275,15 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 		if(!isValidTrack(pTrack, vtxPos)) continue;
 		mEvtData.mTrkId[nTrks]            = i;  
 		mEvtData.mTPCeTrkFlag[nTrks]      = kFALSE;
+		 if(Debug()){
+		LOG_INFO<<"after reading track"<<endm;
+		}
 
 		mEvtData.mCharge[nTrks]           = pTrack->charge();
 
 		 TVector3 pMom               = pTrack->pMom();
 		 TVector3 gMom               = pTrack->gMom();
 		 TVector3 origin             = pTrack->origin();
-		 if(Debug()){
-		LOG_INFO<<"after reading track"<<endm;
-		}
 
 		mEvtData.mPt[nTrks]               = pMom.Perp();
 		mEvtData.mEta[nTrks]              = pMom.PseudoRapidity();
