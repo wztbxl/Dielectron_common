@@ -487,9 +487,6 @@ Bool_t StMiniTreeMaker::isValidTrack(StPicoTrack *pTrack, TVector3 vtxPos) const
 	//Float_t dca = pTrack->dca();
 	//Float_t dca = (pTrack->dca()-vtxPos).mag();
 	Float_t dca = (pTrack->gDCA(vtxPos)).Mag();
-	if(Debug()){
-	LOG_INFO<<"after reading track"<<endm;
-	}
 
 	if(pt<mMinTrkPt)                            return kFALSE;
 	if(TMath::Abs(eta)>mMaxTrkEta)              return kFALSE;
@@ -497,6 +494,9 @@ Bool_t StMiniTreeMaker::isValidTrack(StPicoTrack *pTrack, TVector3 vtxPos) const
 	if(pTrack->nHitsFit()*1./pTrack->nHitsMax()<mMinNHitsFitRatio) return kFALSE;
 	if(pTrack->nHitsDedx()<mMinNHitsDedx)       return kFALSE;
 	if(dca>mMaxDca)                             return kFALSE;
+	if(Debug()){
+	LOG_INFO<<"after reading track"<<endm;
+	}
 
 	return kTRUE;
 }
