@@ -397,12 +397,18 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 double   StMiniTreeMaker::GetTPCPhiWeight(double phi, double eta, int cent)
 {
 	//function to return inverse phi weight for 2nd order TPC EP
-	int TotPhiBins = hCalPhiWeightHisto[cent]->GetXaxis()->GetNbins();
+	if(Debug()){
+		LOG_INFO<<"before calculate Phi weight"<<endm;
+		}
+	int TotPhiBins = hCalPhiWeightHisto[cent]->GetYaxis()->GetNbins();
 	double BinPhi = hCalPhiWeightHisto[cent]->GetYaxis()->FindBin(phi);
 	double BinEta = hCalPhiWeightHisto[cent]->GetXaxis()->FindBin(eta);
-	double BinEntries = hCalPhiWeightHisto[cent]->GetBinContent(BinPhi, BinEta);; //assume this histogram has already been scaled by 1/integral
+	double BinEntries = hCalPhiWeightHisto[cent]->GetBinContent(BinEta, BinPhi);; //assume this histogram has already been scaled by 1/integral
 	double EtaBandEntries = hCalPhiWeightHisto[cent]->Integral(1, TotPhiBins, BinEta, BinEta)/TotPhiBins;//Average value in each Eta band
 	double ratio = EtaBandEntries/BinEntries;
+	if(Debug()){
+		LOG_INFO<<"after calculate Phi weight"<<endm;
+		}
 
   return ratio;
 }
@@ -431,11 +437,17 @@ void StMiniTreeMaker::calQxQy(StPicoTrack *pTrack, TVector3 vtxPos) const
 		}
 	if (mPhiWeightFlag == 0) // no TPC weight
 	{
+		if(Debug()){
+		LOG_INFO<<"getting Phi weight at mode " << mPhiWeightFlag <<endm;
+		}
 		pt*TMath::Cos(2.*phi);
 		pt*TMath::Sin(2.*phi);
 	}
 	if (mPhiWeightFlag == 1) //add TPC weight
 	{
+		if(Debug()){
+		LOG_INFO<<"getting Phi weight"<<endm;
+		}
 		double weight = GetTPCPhiWeight(phi, eta, mEvtData.mCentrality);
 		pt*TMath::Cos(2.*phi)*weight;
 		pt*TMath::Sin(2.*phi)*weight;
