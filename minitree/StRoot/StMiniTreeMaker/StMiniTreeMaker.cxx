@@ -398,8 +398,8 @@ double   StMiniTreeMaker::GetTPCPhiWeight(double phi, double eta, int cent)
 {
 	//function to return inverse phi weight for 2nd order TPC EP
 	int TotPhiBins = hCalPhiWeightHisto[cent]->GetXaxis()->GetNbins();
-	double BinPhi = hCalPhiWeightHisto[cent]->GetXaxis()->FindBin(phi);
-	double BinEta = hCalPhiWeightHisto[cent]->GetYaxis()->FindBin(eta);
+	double BinPhi = hCalPhiWeightHisto[cent]->GetYaxis()->FindBin(phi);
+	double BinEta = hCalPhiWeightHisto[cent]->GetXaxis()->FindBin(eta);
 	double BinEntries = hCalPhiWeightHisto[cent]->GetBinContent(BinPhi, BinEta);; //assume this histogram has already been scaled by 1/integral
 	double EtaBandEntries = hCalPhiWeightHisto[cent]->Integral(1, TotPhiBins, BinEta, BinEta)/TotPhiBins;//Average value in each Eta band
 	double ratio = EtaBandEntries/BinEntries;
