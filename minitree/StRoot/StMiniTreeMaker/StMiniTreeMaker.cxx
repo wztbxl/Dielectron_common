@@ -299,6 +299,9 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 		mEvtData.mNSigmaE[nTrks]          = pTrack->nSigmaElectron();
 		mEvtData.mDca[nTrks]              = pTrack->gDCA(vtxPos).Mag();//SL22b?
 		// mEvtData.mDca[nTrks]              = (pTrack->gDCA()-vtxPos).Mag(); SL18c
+		if(Debug()){
+		LOG_INFO<<"after setting track information"<<endm;
+		}
 
 		if(mFillHisto){
 			hdEdxvsP->Fill(pMom.Mag(), mEvtData.mDedx[nTrks]);
@@ -313,6 +316,9 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 			hEtavsPhi->Fill(mEvtData.mEta[nTrks],mEvtData.mPhi[nTrks]);
 			hEtavsPt->Fill(mEvtData.mEta[nTrks],mEvtData.mPt[nTrks]);
 			hPhivsPt->Fill(mEvtData.mPhi[nTrks],mEvtData.mPt[nTrks]);
+		}
+		if(Debug()){
+		LOG_INFO<<"after fill histograms"<<endm;
 		}
 
 		Int_t bTofPidTraitsIndex          = pTrack->bTofPidTraitsIndex();
@@ -345,6 +351,9 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 		  {
 			mEvtData.mTPCeTrkFlag[nTrks] = kTRUE;
 		  }
+		if(Debug()){
+		LOG_INFO<<"after eID"<<endm;
+		}
 
 
 
