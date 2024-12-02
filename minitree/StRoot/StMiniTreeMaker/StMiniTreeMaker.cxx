@@ -491,6 +491,7 @@ Bool_t StMiniTreeMaker::isValidTrack(StPicoTrack *pTrack, TVector3 vtxPos) const
 
 	if(pt<mMinTrkPt)                            return kFALSE;
 	if(TMath::Abs(eta)>mMaxTrkEta)              return kFALSE;
+	cout << "nHitsFit: " << pTrack->nHitsFit() << endl;
 	if(pTrack->nHitsFit()<mMinNHitsFit)         return kFALSE;
 	if(Debug()){
 	LOG_INFO<<"after reading track"<<endm;
