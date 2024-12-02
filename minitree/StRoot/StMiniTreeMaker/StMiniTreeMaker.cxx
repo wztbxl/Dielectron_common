@@ -59,6 +59,7 @@ Int_t StMiniTreeMaker::Init()
 		for (size_t i = 0; i < 9; i++)
 		{
 			hCalPhiWeightHisto[i] = (TH2D*)f_weight->Get(Form("hPrimaryTrackPhiVsEta_Cent%d",i));
+			hCalPhiWeightHisto[cent]->Print();
 		}
 		f_weight->Close();
 		f_weight->Delete();
@@ -399,6 +400,7 @@ double   StMiniTreeMaker::GetTPCPhiWeight(double phi, double eta, int cent)
 	//function to return inverse phi weight for 2nd order TPC EP
 	if(Debug()){
 		LOG_INFO<<"before calculate Phi weight"<<endm;
+		hCalPhiWeightHisto[cent]->Print();
 		}
 	int TotPhiBins = hCalPhiWeightHisto[cent]->GetYaxis()->GetNbins();
 	double BinPhi = hCalPhiWeightHisto[cent]->GetYaxis()->FindBin(phi);
