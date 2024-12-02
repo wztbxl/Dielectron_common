@@ -85,6 +85,8 @@ Int_t StMiniTreeMaker::Finish()
 		fOutFile->Close();
 		LOG_INFO << "StMiniTreeMaker::Finish() -> write out tree in " << mOutFileName.Data() << endm;
 	}
+	f_weight->Close();
+	f_weight->Delete();
 	if(mPrintConfig) printConfig();
 	return kStOK;
 }
