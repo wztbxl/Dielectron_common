@@ -271,6 +271,7 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 		calQxQy(pTrack, vtxPos);
 		if(Debug()){
 		LOG_INFO<<"after calQxQy"<<endm;
+		cout << "nHitsFit: " << pTrack->nHitsFit() << endl;
 		}
 		if(!isValidTrack(pTrack, vtxPos)) continue;
 		if(Debug()){
