@@ -281,6 +281,9 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 		 TVector3 pMom               = pTrack->pMom();
 		 TVector3 gMom               = pTrack->gMom();
 		 TVector3 origin             = pTrack->origin();
+		 if(Debug()){
+		LOG_INFO<<"after reading track"<<endm;
+		}
 
 		mEvtData.mPt[nTrks]               = pMom.Perp();
 		mEvtData.mEta[nTrks]              = pMom.PseudoRapidity();
