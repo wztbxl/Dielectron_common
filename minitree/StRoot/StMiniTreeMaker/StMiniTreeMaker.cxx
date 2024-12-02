@@ -270,7 +270,13 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 		if(Debug()){
 		LOG_INFO<<pTrack<<endm;
 		}
+		if(Debug()){
+		LOG_INFO<<"before calQxQy track"<<endm;
+		}
 		calQxQy(pTrack, vtxPos);
+		if(Debug()){
+		LOG_INFO<<"after calQxQy track"<<endm;
+		}
 		if(Debug()){
 		LOG_INFO<<pTrack<<endm;
 		}
