@@ -131,12 +131,12 @@ void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TStrin
 	//set Phi weight file
 	if (nRound == 0)
 	{
-		setPhiWeightFlag->setPhiWeightFlag(0);
+		miniTreeMaker->setPhiWeightFlag(0);
 	}
 	if (nRound == 1)
 	{
-		setPhiWeightFlag->setPhiWeightFlag(1);
-		setPhiWeightFile->setPhiWeightFile(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/PhiWeight.root",Energy.Data()));
+		miniTreeMaker->setPhiWeightFlag(1);
+		miniTreeMaker->setPhiWeightFile(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/PhiWeight.root",Energy.Data()));
 	}
 
 	if(debug)
