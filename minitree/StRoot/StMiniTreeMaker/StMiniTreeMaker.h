@@ -75,6 +75,8 @@ class StMiniTreeMaker : public StMaker {
 		void     setPrintCpu(const Bool_t pCpu);
 		void     setPrintConfig(const Bool_t print);
 		void     setTriggerID(const int triggerID);
+		void     setPhiWeightFile(const TString file);
+		void     setPhiWeightFlag(const Int_t flag);
 		double   GetTPCPhiWeight(double phi, double eta, int cent);
 
 	protected:
@@ -125,6 +127,9 @@ class StMiniTreeMaker : public StMaker {
 		DoubleVec      vEtaMinusCosPart;
 		DoubleVec      vEtaMinusSinPart;
 		DoubleVec      vEtaMinusPtWeight;
+		//for phi weight
+		Int_t          mPhiWeightFlag;
+		TString        mPhiWeight_file;
 
 		//for pile up rejection
 		TF1* PileupUplimit;
@@ -203,6 +208,8 @@ inline void StMiniTreeMaker::setStreamName(const TString name) { mStreamName = n
 inline void StMiniTreeMaker::setPrintMemory(const Bool_t pMem) { mPrintMemory = pMem; }
 inline void StMiniTreeMaker::setPrintCpu(const Bool_t pCpu) { mPrintCpu = pCpu; }
 inline void StMiniTreeMaker::setPrintConfig(const Bool_t print) { mPrintConfig = print; }
+inline void StMiniTreeMaker::setPhiWeightFlag(const Int_t flag) { mPhiWeightFlag = flag; }
+inline void StMiniTreeMaker::setPhiWeightFile(const TString file) { mPhiWeight_file = file; }
 inline void StMiniTreeMaker::setTriggerID(const int triggerID) {mTriggerIDs.push_back(triggerID);}
 
 #endif

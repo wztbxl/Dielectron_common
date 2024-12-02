@@ -48,13 +48,17 @@ Int_t StMiniTreeMaker::Init()
 	PileupLowlimit->SetParameters(-6.33246e+00,7.90568e-02,3.03279e-02,-5.03738e-04,3.82206e-06,-1.30813e-08,1.64832e-11);
 	PileupLimit = new TF1("PileupLimit","[0]*x-[1]",0,1000);
 	PileupLimit->SetParameters(0.7,10);
-	// TFile* f_weight = new TFile("weight.root","read");
-	// for (size_t i = 0; i < 9; i++)
-	// {
-	// 	hCalPhiWeightHisto[i] = (TH2D*)f_weight->Get(Form("hPrimaryTrackPhiVsEta_Cent%d",i));
-	// }
-	// f_weight->Close();
-	// f_weight->Delete();
+	if (mPhiWeightFlag == 1)
+	{
+		TFile* f_weight = new TFile(mPhiWeight_file.Data(),"read");
+		for (size_t i = 0; i < 9; i++)
+		{
+			hCalPhiWeightHisto[i] = (TH2D*)f_weight->Get(Form("hPrimaryTrackPhiVsEta_Cent%d",i));
+		}
+		f_weight->Close();
+		f_weight->Delete();
+	}
+
 	
 
 	return kStOK;
@@ -392,9 +396,19 @@ void StMiniTreeMaker::calQxQy(StPicoTrack *pTrack, TVector3 vtxPos) const
 	if(pTrack->nHitsFit()*1./pTrack->nHitsMax()<0.52) return;
 	if(dca>1.)                                        return;
 	hPrimaryTrackPhiVsEta[mEvtData.mCentrality]->Fill(eta,phi);
-
-	Double_t mCosPart = pt*TMath::Cos(2.*phi);
-	Double_t mSinPart = pt*TMath::Sin(2.*phi);
+	Double_t mCosPart = 0;
+	Double_t mSinPart = 0;
+	if (mPhiWeightFlag == 0) // no TPC weight
+	{
+		pt*TMath::Cos(2.*phi);
+		pt*TMath::Sin(2.*phi);
+	}
+	if (mPhiWeightFlag == 1) //add TPC weight
+	{
+		double weight = GetTPCPhiWeight(phi, eta, mEvtData.mCentrality);
+		pt*TMath::Cos(2.*phi)*weight;
+		pt*TMath::Sin(2.*phi)*weight;
+	}
 
 	if(eta>0.){
 		vEtaPlusCosPart.push_back(mCosPart);

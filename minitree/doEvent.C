@@ -55,7 +55,7 @@ void load(){
 	gSystem->Load("StMiniTreeMaker");
 }
 
-void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TString Energy = "9p2", const TString outputFile="test/test.root", const Bool_t debug = kFALSE)
+void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TString Energy = "9p2", const TString outputFile="test/test.root", int nRound = 0, const Bool_t debug = kFALSE)
 {
 	load();
 
@@ -126,8 +126,18 @@ void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TStrin
 		cout<<"Failed to read total triggerID !!!"<<endl;
 		return;
 	}
+	indata.close();
 
-
+	//set Phi weight file
+	if (nRound == 0)
+	{
+		setPhiWeightFlag->setPhiWeightFlag(0);
+	}
+	if (nRound == 1)
+	{
+		setPhiWeightFlag->setPhiWeightFlag(1);
+		setPhiWeightFile->setPhiWeightFile(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/PhiWeight.root",Energy.Data()));
+	}
 
 	if(debug)
 		miniTreeMaker->SetDebug(1);
