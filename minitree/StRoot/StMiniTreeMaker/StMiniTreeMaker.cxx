@@ -50,7 +50,7 @@ Int_t StMiniTreeMaker::Init()
 	PileupLimit->SetParameters(0.7,10);
 	if (mPhiWeightFlag == 1)
 	{
-		TFile* f_weight = new TFile(mPhiWeight_file.Data(),"read");
+		f_weight = new TFile(mPhiWeight_file.Data(),"read");
 		if(!f_weight->IsOpen())
 		{
 			cout << "Can not open the phi weight file: " << mPhiWeight_file.Data() << endl;
@@ -58,11 +58,12 @@ Int_t StMiniTreeMaker::Init()
 		}
 		for (size_t i = 0; i < 9; i++)
 		{
+			hCalPhiWeightHisto[i] = NULL;
 			hCalPhiWeightHisto[i] = (TH2D*)f_weight->Get(Form("hPrimaryTrackPhiVsEta_Cent%d",i));
 			hCalPhiWeightHisto[i]->Print();
 		}
 		f_weight->Close();
-		// f_weight->Delete();
+		// // f_weight->Delete();
 	}
 
 	
@@ -210,7 +211,10 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 	mEvtData.mGRefMultCorr = mRefMultCorr->getRefMultCorr();
 	mEvtData.mEvtWeight = mRefMultCorr->getWeight();
 	mEvtData.mCentrality = mRefMultCorr->getCentralityBin9();//9 Centrality bin
-	hCalPhiWeightHisto[mEvtData.mCentrality]->Print();
+	if(Debug()){
+			cout << hCalPhiWeightHisto[mEvtData.mCentrality] << endl;
+			hCalPhiWeightHisto[mEvtData.mCentrality]->Print();
+	}
 	
 	hGRefMultvsGRefMultCorr->Fill(mEvtData.mGRefMultCorr,mEvtData.mRefMult);
 
