@@ -269,6 +269,9 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 		if(!pTrack) continue;
 
 		calQxQy(pTrack, vtxPos);
+		if(Debug()){
+		LOG_INFO<<"after calQxQy"<<endm;
+		}
 		if(!isValidTrack(pTrack, vtxPos)) continue;
 		mEvtData.mTrkId[nTrks]            = i;  
 		mEvtData.mTPCeTrkFlag[nTrks]      = kFALSE;
