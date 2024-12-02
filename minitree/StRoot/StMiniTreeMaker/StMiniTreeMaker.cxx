@@ -51,6 +51,11 @@ Int_t StMiniTreeMaker::Init()
 	if (mPhiWeightFlag == 1)
 	{
 		TFile* f_weight = new TFile(mPhiWeight_file.Data(),"read");
+		if(!f_weight->IsOpen())
+		{
+			cout << "Can not open the phi weight file: " << mPhiWeight_file.Data() << endl;
+			return kStERR;
+		}
 		for (size_t i = 0; i < 9; i++)
 		{
 			hCalPhiWeightHisto[i] = (TH2D*)f_weight->Get(Form("hPrimaryTrackPhiVsEta_Cent%d",i));
