@@ -267,10 +267,12 @@ Bool_t StMiniTreeMaker::processPicoEvent()
 	for(Int_t i=0;i<nNodes;i++){
 		StPicoTrack *pTrack = mPicoDst->track(i);
 		if(!pTrack) continue;
-
+		if(Debug()){
+		LOG_INFO<<pTrack<<endm;
+		}
 		calQxQy(pTrack, vtxPos);
 		if(Debug()){
-		LOG_INFO<<"after calQxQy"<<endm;
+		LOG_INFO<<pTrack<<endm;
 		}
 		if(!isValidTrack(pTrack, vtxPos)) continue;
 		if(Debug()){
