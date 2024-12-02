@@ -62,7 +62,7 @@ Int_t StMiniTreeMaker::Init()
 			hCalPhiWeightHisto[i]->Print();
 		}
 		f_weight->Close();
-		f_weight->Delete();
+		// f_weight->Delete();
 	}
 
 	
