@@ -1,4 +1,4 @@
-OBJS = miniDst.o Param.o CentralityMaker.o StRefMultCorr.o produceShiftFactor.o
+OBJS = miniDst.o ../../StRefMultCorr/Param.o ../../StRefMultCorr/CentralityMaker.o ../../StRefMultCorr/StRefMultCorr.o produceShiftFactor.o
 EXE =  produceShiftFactor
 
 #OBJS = MuDst.o createphiwgt.o
