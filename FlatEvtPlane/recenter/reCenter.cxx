@@ -74,7 +74,7 @@ int main(int argc, char** argv)
 	char outFile[1024];
 	Energy = "9p2";
 	sprintf(outFile,"test");
-	if(argc==3){
+	if(argc==4){
 		inFile = argv[1];
 		Energy = argv[3];
 		sprintf(outFile,"%s",argv[2]);
