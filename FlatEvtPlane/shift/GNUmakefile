@@ -11,8 +11,8 @@ ROOTCFLAGS    = $(shell root-config --cflags)
 ROOTLIBS      = $(shell root-config --libs)
 ROOTGLIBS     = $(shell root-config --glibs)
 
-INCFLAGS = -I$(ROOTSYS)/include
-LDFLAGS = -L$(ROOTSYS)/lib
+INCFLAGS = -I$(ROOTSYS)/include -I../../StRefMultCorr
+LDFLAGS = -L$(ROOTSYS)/lib -L../../StRefMultCorr
 
 CXX = g++
 FLAGS = -m32 -std=c++11 -fno-inline -Wall -g $(INCFLAGS) $(LDFLAGS)
