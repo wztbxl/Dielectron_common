@@ -3,11 +3,12 @@
 #include "/star/u/wangzhen/run20/Dielectron/Analysis/cuts.h"
 #include "/star/u/wangzhen/run20/Dielectron/Analysis/RefMfun.h"
 
-#include "CentralityMaker.h"
-#include "StRefMultCorr.h"
+#include "../../StRefMultCorr/CentralityMaker.h"
+#include "../../StRefMultCorr/StRefMultCorr.h"
 #include "miniDst.h"
 
 TFile *fOutFile;
+TString Energy;
 
 map<Int_t,Int_t> mTotalRunId;
 map<Int_t,Int_t> mBadRunId_001;
@@ -66,13 +67,16 @@ TF1* PileupLowlimit;
 
 int main(int argc, char** argv)
 {
-	if(argc!=1&&argc!=3) return -1;
+	if(argc!=1&&argc!=4) return -1;
+	// argv[3] is energy
 
 	TString inFile="test.list";
 	char outFile[1024];
+	Energy = "9p2";
 	sprintf(outFile,"test");
 	if(argc==3){
 		inFile = argv[1];
+		Energy = argv[3];
 		sprintf(outFile,"%s",argv[2]);
 	}
 
@@ -461,9 +465,12 @@ void bookHistograms(char* outFile)
 bool Init()
 {
 	cout<<endl;
+	cout << "STARTING at energy : " << Energy << endl;
 
 	ifstream indata;
-	indata.open("/star/u/wangzhen/run20/Dielectron/DataQA/mTotalRunList.dat");
+
+	cout << "Loading the run list from " << Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalRunList.dat",Energy.Data()) << endl;
+	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalRunList.dat",Energy.Data()));
 	mTotalRunId.clear();
 	if(indata.is_open()){
 		cout<<"read in total run number list and recode run number ...";
@@ -483,10 +490,11 @@ bool Init()
 	
 	//read in bad run for 580001 and 580021
 	ifstream indata_001;
-	indata_001.open("/star/u/wangzhen/run20/Dielectron/BadRunList/BadRunList.dat");
+	cout << "Loading the bad runlist from " << Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()) << endl;
+	indata_001.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()));
 	mBadRunId_001.clear();
 	if(indata_001.is_open()){
-		cout<<"read in total run number list and recode run number ...";
+		cout<<"read in the bad run list for " << Energy << " GeV ...";
 		Int_t oldId;
 		Int_t newId=0;
 		while(indata_001>>oldId){
@@ -495,7 +503,7 @@ bool Init()
 		}
 		cout<<" [OK]"<<endl;
 	}else{
-		cout<<"Failed to load the total bad run number list !!!"<<endl;
+		cout<<"Failed to load the total bad run number list" << Energy << " GeV ...";
 		return kFALSE;
 	}
 	indata_001.close();

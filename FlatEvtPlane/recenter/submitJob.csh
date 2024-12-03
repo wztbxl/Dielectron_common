@@ -1,6 +1,12 @@
 #!/bin/bash
 date
 
+if [ $# -ne 1 ]; then
+     echo "Please input 1 arguement!"
+     echo "arg1 for Energy"
+	 exit 1
+fi
+
 dir=$(pwd)
 echo $dir
 
@@ -44,7 +50,7 @@ for FILE in `cat datalist_all`
 do
      echo $FILE
      echo "#!/bin/csh">>script_all/all_$ifile.csh
-     echo "./reCenter $FILE output_all/$ifile">>script_all/all_$ifile.csh
+     echo "./reCenter $FILE output_all/$ifile $1">>script_all/all_$ifile.csh
      chmod 755 script_all/all_$ifile.csh
 
      echo "Executable       = script_all/all_$ifile.csh">>runAll_all.job

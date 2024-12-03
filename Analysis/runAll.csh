@@ -38,6 +38,7 @@ fi
 
   
 ifile=0
+# for FILE in `cat datalist_$3`
 for FILE in `cat datalist_$1`
 do
      echo $FILE
