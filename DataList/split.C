@@ -1,12 +1,14 @@
-#include "iostream.h"
+#include <iostream>
+#include "TString.h"
 
-void split(const Char_t *infile = "./data.list", const Int_t NUM = 50)
+void split(const TString Energy = "9p2", const Int_t NUM = 50)
 {
 	gROOT->Reset();
 
-	system("mkdir -p filelist_all");
-	system("rm -rf filelist_all/*");
-	system("rm -rf datalist_all");
+	TString infile = Form("data_%s.list",Energy.Data());
+	system(Form("mkdir -p filelist_%s",Energy.Data()));
+	system(Form("rm -rf filelist_%s/*",Energy.Data()));
+	system(Form("rm -rf datalist_%s",Energy.Data()));
 
 	ifstream* inputStream = new ifstream;
 	inputStream->open(infile);
@@ -15,16 +17,17 @@ void split(const Char_t *infile = "./data.list", const Int_t NUM = 50)
 		return;
 	}
 	char line[512];
-	char outputfile[100];
+	// char outputfile[100];
 	ofstream outDataList;
-	outDataList.open("datalist_all");
+	outDataList.open(Form("datalist_%s",Energy.Data()));
 	ofstream outData;
 	for (int i=0;inputStream->good();i++) {
 		inputStream->getline(line,512);
 		if  ( inputStream->good() ) {
 			if(i%NUM==0) {
 				if(outData.is_open()) outData.close();
-				sprintf(outputfile,"filelist_all/%d.list",i/NUM);
+				// sprintf(outputfile,"filelist_all/%d.list",i/NUM);
+				TString outputfile = Form("filelist_%s/%d.list",Energy.Data(),i/NUM);
 				outData.open(outputfile);
 				outDataList << outputfile << endl;
 			}
