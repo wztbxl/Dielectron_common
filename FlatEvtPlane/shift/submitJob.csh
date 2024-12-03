@@ -50,7 +50,7 @@ for FILE in `cat datalist_$1`
 do
      echo $FILE
      echo "#!/bin/csh">>script_all/all_$ifile.csh
-     echo "./produceShiftFactor $FILE output_all/$ifile">>script_all/all_$ifile.csh
+     echo "./produceShiftFactor $FILE output_all/$ifile $1">>script_all/all_$ifile.csh
      chmod 755 script_all/all_$ifile.csh
 
      echo "Executable       = script_all/all_$ifile.csh">>runAll_all.job
