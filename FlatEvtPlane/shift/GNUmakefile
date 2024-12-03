@@ -1,4 +1,4 @@
-OBJS = miniDst.o ../../StRefMultCorr/Param.o ../../StRefMultCorr/CentralityMaker.o ../../StRefMultCorr/StRefMultCorr.o produceShiftFactor.o
+OBJS = miniDst.o Param.o CentralityMaker.o StRefMultCorr.o produceShiftFactor.o
 EXE =  produceShiftFactor
 
 #OBJS = MuDst.o createphiwgt.o
@@ -18,6 +18,9 @@ CXX = g++
 FLAGS = -m32 -std=c++11 -fno-inline -Wall -g $(INCFLAGS) $(LDFLAGS)
 
 COMPILE = $(CXX) $(FLAGS) -c 
+
+vpath %.o ../../StRefMultCorr/
+vpath %.cxx ../../StRefMultCorr/
 
 all: $(EXE)
 
