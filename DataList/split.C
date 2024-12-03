@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unistd.h>  // for getcwd
 #include "TString.h"
 
 void split(const TString Energy = "9p2", const Int_t NUM = 50)
