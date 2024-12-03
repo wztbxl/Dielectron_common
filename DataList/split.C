@@ -10,6 +10,10 @@ void split(const TString Energy = "9p2", const Int_t NUM = 50)
 	system(Form("rm -rf filelist_%s/*",Energy.Data()));
 	system(Form("rm -rf datalist_%s",Energy.Data()));
 
+	char tmp[256];
+	getcwd(tmp, 256);
+	TString currentDir = tmp;
+
 	ifstream* inputStream = new ifstream;
 	inputStream->open(infile);
 	if (!(inputStream)) {
@@ -27,7 +31,7 @@ void split(const TString Energy = "9p2", const Int_t NUM = 50)
 			if(i%NUM==0) {
 				if(outData.is_open()) outData.close();
 				// sprintf(outputfile,"filelist_all/%d.list",i/NUM);
-				TString outputfile = Form("filelist_%s/%d.list",Energy.Data(),i/NUM);
+				TString outputfile = Form("%s/filelist_%s/%d.list",currentDir.Data(),Energy.Data(),i/NUM);
 				outData.open(outputfile);
 				outDataList << outputfile << endl;
 			}
