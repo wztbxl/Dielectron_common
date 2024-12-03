@@ -3,8 +3,8 @@
 #include "/star/u/wangzhen/run20/Dielectron/Analysis/cuts.h"
 #include "/star/u/wangzhen/run20/Dielectron/Analysis/RefMfun.h"
 
-#include "CentralityMaker.h"
-#include "StRefMultCorr.h"
+#include "../../StRefMultCorr/CentralityMaker.h"
+#include "../../StRefMultCorr/StRefMultCorr.h"
 #include "miniDst.h"
 
 TFile *fOutFile;
@@ -14,6 +14,8 @@ map<Int_t,Int_t> mTotalDayId;
 map<Int_t,Int_t> mBadRunId_001;
 map<Int_t,Int_t> mBadRunId_021;
 TF1* Pileuplimit;
+
+TString Energy;
 
 bool Init();
 // Double_t GetRefMultCorr(const Int_t RefMult, const Double_t z);
@@ -63,13 +65,15 @@ TProfile *shiftfactorsin_cent_west_rejectE[mArrayLength];
 
 int main(int argc, char** argv)
 {
-	if(argc!=1&&argc!=3) return -1;
+	if(argc!=1&&argc!=4) return -1;
 
 	TString inFile="test.list";
 	char outFile[1024];
 	sprintf(outFile,"test");
-	if(argc==3){
+	Energy = "9p2";
+	if(argc==4){
 		inFile = argv[1];
+		Energy = argv[3];
 		sprintf(outFile,"%s",argv[2]);
 	}
 
@@ -486,13 +490,15 @@ void bookHistograms(char* outFile)
 bool Init()
 {
 	cout<<endl;
+	cout << "STARTING at energy : " << Energy << endl;
 
 	ifstream indata;
 
-	indata.open("/star/u/wangzhen/run20/Dielectron/DataQA/mTotalRunList.dat");
+	cout << "Loading the run list from " << Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalRunList.dat",Energy.Data()) << endl;
+	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalRunList.dat",Energy.Data()));
 	mTotalRunId.clear();
 	if(indata.is_open()){
-		cout<<"read in total run number list and recode run number ...";
+		cout<<"read in total run number list and recode run number for " << Energy << " GeV ...";
 		Int_t oldId;
 		Int_t newId=0;
 		while(indata>>oldId){
@@ -501,7 +507,7 @@ bool Init()
 		}
 		cout<<" [OK]"<<endl;
 	}else{
-		cout<<"Failed to load the total run number list !!!"<<endl;
+		cout<<"Failed to load the total run number list for " << Energy << " GeV ..."<<endl;
 		return kFALSE;
 	}
 	indata.close();
@@ -509,10 +515,11 @@ bool Init()
 		cout<<iter->second<<" \t"<<iter->first<<endl;
 	cout<<endl;
 
-	indata.open("/star/u/wangzhen/run20/Dielectron/DataQA/mTotalDayList.dat");
+	cout << "Loading the day list from " << Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalDayList.dat",Energy.Data()) << endl;
+	indata.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/mTotalDayList.dat",Energy.Data()));
 	mTotalDayId.clear();
 	if(indata.is_open()){
-		cout<<"read in day number list and recode day number ...";
+		cout<<"read in day number list and recode day number for " << Energy << " GeV ...";
 		Int_t oldId;
 		Int_t newId=0;
 		while(indata>>oldId){
@@ -521,7 +528,7 @@ bool Init()
 		}
 		cout<<" [OK]"<<endl;
 	}else{
-		cout<<"Failed to load the day number list !!!"<<endl;
+		cout<<"Failed to load the day number list for " << Energy << " GeV ..."<<endl;
 		return kFALSE;
 	}
 	indata.close();
@@ -532,10 +539,11 @@ bool Init()
 
 	//read in bad run for 580001 and 580021
 	ifstream indata_001;
-	indata_001.open("/star/u/wangzhen/run20/Dielectron/BadRunList/BadRunList.dat");
+	cout << "Loading the bad runlist from " << Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()) << endl;
+	indata_001.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/RunList/BadRunList.dat",Energy.Data()));
 	mBadRunId_001.clear();
 	if(indata_001.is_open()){
-		cout<<"read in total bad run number list and recode bad run number ...";
+		cout<<"read in the bad run list for " << Energy << " GeV ...";
 		Int_t oldId;
 		Int_t newId=0;
 		while(indata_001>>oldId){
@@ -544,7 +552,7 @@ bool Init()
 		}
 		cout<<" [OK]"<<endl;
 	}else{
-		cout<<"Failed to load the total bad run number list !!!"<<endl;
+		cout<<"Failed to load the total bad run number list" << Energy << " GeV ...";
 		return kFALSE;
 	}
 	indata_001.close();
@@ -555,7 +563,7 @@ bool Init()
 
 
 
-    fReCenter = TFile::Open("/star/u/wangzhen/run20/Dielectron/FlatEvtPlane/reCenter/output_all/reCenter.root");
+    fReCenter = TFile::Open("/star/u/wangzhen/data01/QA/DiElectron_Commom/FlatEvtPlane/reCenter/9p2/reCenter.root");
 	etapluszplusQx   = (TProfile2D *)fReCenter->Get("etapluszplusQx");
 	etapluszminusQx  = (TProfile2D *)fReCenter->Get("etapluszminusQx");
 	etaminuszplusQx  = (TProfile2D *)fReCenter->Get("etaminuszplusQx");
