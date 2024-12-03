@@ -1,6 +1,12 @@
 #!/bin/bash
 date
 
+if [ $# -ne 1 ]; then
+     echo "Please input 1 arguement!"
+     echo "arg1 for Energy"
+	 exit 1
+fi
+
 dir=$(pwd)
 echo $dir
 
@@ -40,7 +46,7 @@ echo "">>runAll_all.job
 echo "">>runAll_all.job
 
 ifile=0
-for FILE in `cat datalist_all`
+for FILE in `cat datalist_$1`
 do
      echo $FILE
      echo "#!/bin/csh">>script_all/all_$ifile.csh
