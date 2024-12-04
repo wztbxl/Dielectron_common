@@ -19,6 +19,9 @@ FLAGS = -m32 -std=c++11 -fno-inline -Wall -g $(INCFLAGS) $(LDFLAGS)
 
 COMPILE = $(CXX) $(FLAGS) -c 
 
+vpath %.o ../StRefMultCorr/
+vpath %.cxx ../StRefMultCorr/
+
 all: $(EXE)
 
 $(EXE): $(OBJS)
