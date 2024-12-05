@@ -31,6 +31,10 @@ EOF
 
  echo "SourceDir: ${origDir}"
  echo "DestinationDir: ${outDir}"
+ cd ${origDir}
+ mkdir -p raw
+ mkdir -p output
+ mv *.root raw 
 
-   ~/Scripts/Hadd/hadd.sh 0 ${origDir} ${outDir} 50
+   ~/Scripts/Hadd/hadd.sh 0 raw output 50
 
