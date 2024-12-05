@@ -18,7 +18,7 @@ Example:
 EOF
 }
 
- if [ $# -ne 4 ]; then
+ if [ $# -ne 3 ]; then
     showhelp
     exit 0
  fi
