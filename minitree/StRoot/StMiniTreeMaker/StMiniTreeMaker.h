@@ -180,6 +180,7 @@ class StMiniTreeMaker : public StMaker {
 		TH2D           *hnTOFMatchvsRefmult;
 		// TH3D           *hPrimaryTrackPhiVsEta;
 		TH2D           *hPrimaryTrackPhiVsEta[9];
+		TH2D           *hPrimaryTrackPhiVsEta_PhiWeight[9];
 		TH2D           *hCalPhiWeightHisto[9];
 		TFile          *f_weight;
 		// TH2D           *hEVzvsVx;

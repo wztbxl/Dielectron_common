@@ -463,6 +463,7 @@ void StMiniTreeMaker::calQxQy(StPicoTrack *pTrack, TVector3 vtxPos) const
 		LOG_INFO<<"getting Phi weight"<<endm;
 		}
 		double weight = GetTPCPhiWeight(phi, eta, mEvtData.mCentrality);
+		hPrimaryTrackPhiVsEta[mEvtData.mCentrality]->Fill(eta,phi);
 		pt*TMath::Cos(2.*phi)*weight;
 		pt*TMath::Sin(2.*phi)*weight;
 	}
@@ -666,6 +667,7 @@ void StMiniTreeMaker::bookHistos()
 	for (int i = 0; i < 9; i++)
 	{
 		hPrimaryTrackPhiVsEta[i] = new TH2D(Form("hPrimaryTrackPhiVsEta_Cent%d",i),"hPrimaryTrackPhiVsEta; #eta; #phi", 60,-1.5,1.5,20,-TMath::Pi(),TMath::Pi());
+		hPrimaryTrackPhiVsEta_PhiWeight[i] = new TH2D(Form("hPrimaryTrackPhiVsEta_PhiWeight_Cent%d",i),"hPrimaryTrackPhiVsEta_PhiWeight; #eta; #phi", 60,-1.5,1.5,20,-TMath::Pi(),TMath::Pi());
 	}
 	
 	
