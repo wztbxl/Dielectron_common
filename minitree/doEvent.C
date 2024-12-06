@@ -55,6 +55,7 @@ void load(){
 	gSystem->Load("StMiniTreeMaker");
 }
 
+// round 0 for generate the phi weight histograms, round1 for apply phi weight
 void doEvent(Int_t nEvents=-1, const Char_t *inputFile="test.list", const TString Energy = "9p2", const TString outputFile="test/test.root", int nRound = 0, const Bool_t debug = kFALSE)
 {
 	load();
