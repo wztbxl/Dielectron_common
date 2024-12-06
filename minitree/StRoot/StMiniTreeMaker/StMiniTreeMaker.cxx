@@ -464,7 +464,7 @@ void StMiniTreeMaker::calQxQy(StPicoTrack *pTrack, TVector3 vtxPos) const
 		LOG_INFO<<"getting Phi weight"<<endm;
 		}
 		double weight = GetTPCPhiWeight(phi, eta, mEvtData.mCentrality);
-		hPrimaryTrackPhiVsEta_PhiWeight[mEvtData.mCentrality]->Fill(eta,phi);
+		hPrimaryTrackPhiVsEta_PhiWeight[mEvtData.mCentrality]->Fill(eta,phi,weight);
 		mCosPart = pt*TMath::Cos(2.*phi)*weight;
 		mSinPart = pt*TMath::Sin(2.*phi)*weight;
 	}
