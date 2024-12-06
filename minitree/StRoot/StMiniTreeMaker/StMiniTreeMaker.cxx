@@ -455,8 +455,8 @@ void StMiniTreeMaker::calQxQy(StPicoTrack *pTrack, TVector3 vtxPos) const
 		if(Debug()){
 		LOG_INFO<<"getting Phi weight at mode " << mPhiWeightFlag <<endm;
 		}
-		pt*TMath::Cos(2.*phi);
-		pt*TMath::Sin(2.*phi);
+		mCosPart = pt*TMath::Cos(2.*phi);
+		mSinPart =pt*TMath::Sin(2.*phi);
 	}
 	if (mPhiWeightFlag == 1) //add TPC weight
 	{
@@ -464,9 +464,9 @@ void StMiniTreeMaker::calQxQy(StPicoTrack *pTrack, TVector3 vtxPos) const
 		LOG_INFO<<"getting Phi weight"<<endm;
 		}
 		double weight = GetTPCPhiWeight(phi, eta, mEvtData.mCentrality);
-		hPrimaryTrackPhiVsEta[mEvtData.mCentrality]->Fill(eta,phi);
-		pt*TMath::Cos(2.*phi)*weight;
-		pt*TMath::Sin(2.*phi)*weight;
+		hPrimaryTrackPhiVsEta_PhiWeight[mEvtData.mCentrality]->Fill(eta,phi);
+		mCosPart = pt*TMath::Cos(2.*phi)*weight;
+		mSinPart = pt*TMath::Sin(2.*phi)*weight;
 	}
 	if(Debug()){
 		LOG_INFO<<"after get Phi weight"<<endm;
