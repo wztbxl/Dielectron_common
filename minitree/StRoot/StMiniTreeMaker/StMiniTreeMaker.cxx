@@ -419,7 +419,7 @@ double   StMiniTreeMaker::GetTPCPhiWeight(double phi, double eta, int cent)
 	if(Debug()){
 		cout << "totPhiBins: " << TotPhiBins << " BinPhi: " << BinPhi << " BinEta: " << BinEta << " BinEntries: " << BinEntries << endl;
 		}
-	double EtaBandEntries = hCalPhiWeightHisto[cent]->Integral(1, TotPhiBins, BinEta, BinEta)/TotPhiBins;//Average value in each Eta band
+	double EtaBandEntries = hCalPhiWeightHisto[cent]->Integral(BinEta, BinEta, 1, TotPhiBins )/TotPhiBins;//Average value in each Eta band
 	double ratio = EtaBandEntries/BinEntries;
 	if(Debug()){
 		LOG_INFO<<"after calculate Phi weight"<<endm;
