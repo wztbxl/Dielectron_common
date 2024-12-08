@@ -415,6 +415,7 @@ double   StMiniTreeMaker::GetTPCPhiWeight(double phi, double eta, int cent)
 	int TotPhiBins = hCalPhiWeightHisto[cent]->GetYaxis()->GetNbins();
 	double BinPhi = hCalPhiWeightHisto[cent]->GetYaxis()->FindBin(phi);
 	double BinEta = hCalPhiWeightHisto[cent]->GetXaxis()->FindBin(eta);
+	if(BinEta == 51) BinEta = 50;
 	double BinEntries = hCalPhiWeightHisto[cent]->GetBinContent(BinEta, BinPhi);; //assume this histogram has already been scaled by 1/integral
 	if(Debug()){
 		cout << "totPhiBins: " << TotPhiBins << " BinPhi: " << BinPhi << " BinEta: " << BinEta << " BinEntries: " << BinEntries << endl;
