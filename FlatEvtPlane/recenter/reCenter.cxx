@@ -67,6 +67,8 @@ TF1* PileupLowlimit;
 //check the nan issue
 TH3F* hQXvsQYvsCent_east_nan;
 TH3F* hQXvsQYvsCent_west_nan;
+TH1D* hVz_nan;
+TH1D* hCentrality_nan;
 
 int main(int argc, char** argv)
 {
@@ -483,6 +485,11 @@ void bookHistograms(char* outFile)
   hnTofHitsvsRefMult_Vz35 = new TH2D("hnTofHitsvsRefMult_Vz35",";RefMult;nTofHits",500,0,500,500,0,500);
   hnPlusTrkvsnMinusTrkvsCent = new TH3D("hnPlusTrkvsnMinusTrkvsCent","nPlusTrk;nMinusTrk;Cent",500,0,500,500,0,500,10,0,10);
   Pileuplimit = new TF1("Pileuplimit","0.7*x-10",0,1000);
+
+	hVz_nan = TH1D("hVz_nan","hVz_nan;Vz",100,-50,50);
+	hCentrality_nan = TH1D("hCentrality_nan","hCentrality_nan;Centrality",16,0,16);
+	hQXvsQYvsCent_east_nan = TH2F("hQXvsQYvsCent_east_nan","; Qx; Qy",200,-10,10,200,-10,10);
+	hQXvsQYvsCent_west_nan = TH2F("hQXvsQYvsCent_west_nan","; Qx; Qy",200,-10,10,200,-10,10);
 
 }
 //____________________________________________________________
