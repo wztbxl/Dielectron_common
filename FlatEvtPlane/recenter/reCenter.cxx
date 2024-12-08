@@ -64,6 +64,9 @@ TF1* Pileuplimit;
 TF1* PileupUplimit;
 TF1* PileupLowlimit;
 
+//check the nan issue
+TH3F* hQXvsQYvsCent_east_nan;
+TH3F* hQXvsQYvsCent_west_nan;
 
 int main(int argc, char** argv)
 {
@@ -270,6 +273,13 @@ bool passEvent(miniDst const* const event)
 	// 	}
 	// }
 
+	if(isnan(mEtaPlusQx) || isnan(mEtaPlusQy) || isnan(mEtaMinusQx) || isnan(mEtaMinusQy)){
+		cout<<"nan issue"<<endl;
+		hQXvsQYvsCent_east_nan->Fill(mEtaMinusQx,mEtaMinusQy,mCentrality);
+		hQXvsQYvsCent_west_nan->Fill(mEtaPlusQx,mEtaPlusQy,mCentrality);
+		return kFALSE;
+	}
+
 	//add the electron selection cut to reject the electrons
 	Int_t npTrks = event->mNTrks;
 	for(int j=0;j<npTrks;j++)
@@ -316,14 +326,26 @@ bool passEvent(miniDst const* const event)
 			{
 				mEtaMinusQx_rejectE -= pt*TMath::Cos(2*phi);
 				mEtaMinusQy_rejectE -= pt*TMath::Sin(2*phi);
+				mEtaMinusPtWeight_rejectE -= pt;
 
 			} else if (eta > 0)
 			{
 				mEtaPlusQx_rejectE -= pt*TMath::Cos(2*phi);
 				mEtaPlusQy_rejectE -= pt*TMath::Sin(2*phi);
+				mEtaPlusPtWeight_rejectE -= pt;
 			}
 
-	}
+	}// end of electron rejection loop
+
+
+	mEtaPlusQx_rejectE = mEtaPlusQx_rejectE/mEtaPlusPtWeight_rejectE;
+	mEtaPlusQy_rejectE = mEtaPlusQy_rejectE/mEtaPlusPtWeight_rejectE;
+	mEtaMinusQx_rejectE = mEtaMinusQx_rejectE/mEtaMinusPtWeight_rejectE;
+	mEtaMinusQy_rejectE = mEtaMinusQy_rejectE/mEtaMinusPtWeight_rejectE;
+	mEtaPlusQx = mEtaPlusQx/mEtaPlusPtWeight;
+	mEtaPlusQy = mEtaPlusQy/mEtaPlusPtWeight;
+	mEtaMinusQx = mEtaMinusQx/mEtaMinusPtWeight;
+	mEtaMinusQy = mEtaMinusQy/mEtaMinusPtWeight;
 
 	if(mEtaPlusNTrks > 0)
 	{
