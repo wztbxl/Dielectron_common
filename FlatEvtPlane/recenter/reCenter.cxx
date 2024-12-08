@@ -488,8 +488,8 @@ void bookHistograms(char* outFile)
 
 	hVz_nan = new TH1D("hVz_nan","hVz_nan;Vz",100,-50,50);
 	hCentrality_nan = new TH1D("hCentrality_nan","hCentrality_nan;Centrality",16,0,16);
-	hQXvsQYvsCent_east_nan = new TH2F("hQXvsQYvsCent_east_nan","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
-	hQXvsQYvsCent_west_nan = new TH2F("hQXvsQYvsCent_west_nan","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
+	hQXvsQYvsCent_east_nan = new TH3F("hQXvsQYvsCent_east_nan","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
+	hQXvsQYvsCent_west_nan = new TH3F("hQXvsQYvsCent_west_nan","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 
 }
 //____________________________________________________________
