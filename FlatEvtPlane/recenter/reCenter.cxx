@@ -69,6 +69,8 @@ TH3F* hQXvsQYvsCent_east_nan;
 TH3F* hQXvsQYvsCent_west_nan;
 TH3F* hQXvsQYvsCent_east_nan_rejectE;
 TH3F* hQXvsQYvsCent_west_nan_rejectE;
+TH3F* hQXvsQYvsCent_east_ZeroWeight;
+TH3F* hQXvsQYvsCent_west_ZeroWeight;
 
 TH1D* hVz_nan;
 TH1D* hCentrality_nan;
@@ -353,6 +355,12 @@ bool passEvent(miniDst const* const event)
 		hQXvsQYvsCent_west_nan_rejectE->Fill(mEtaPlusQx_rejectE,mEtaPlusQy_rejectE,mCentrality);
 		return kFALSE;
 	}
+	if(mEtaPlusPtWeight_rejectE == 0 || mEtaMinusPtWeight_rejectE == 0 || mEtaPlusPtWeight == 0 || mEtaMinusPtWeight == 0){
+		cout<<"rejectE pt weight issue"<<endl;
+		hQXvsQYvsCent_east_ZeroWeight->Fill(mEtaMinusQx_rejectE,mEtaMinusQy_rejectE,mCentrality);
+		hQXvsQYvsCent_west_ZeroWeight->Fill(mEtaPlusQx_rejectE,mEtaPlusQy_rejectE,mCentrality);
+		return kFALSE;
+	}
 
 	mEtaPlusQx_rejectE = mEtaPlusQx_rejectE/mEtaPlusPtWeight_rejectE;
 	mEtaPlusQy_rejectE = mEtaPlusQy_rejectE/mEtaPlusPtWeight_rejectE;
@@ -506,6 +514,8 @@ void bookHistograms(char* outFile)
 	hCentrality_nan_rejectE = new TH1D("hCentrality_nan_rejectE","hCentrality_nan_rejectE;Centrality",16,0,16);
 	hQXvsQYvsCent_east_nan_rejectE = new TH3F("hQXvsQYvsCent_east_nan_rejectE","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 	hQXvsQYvsCent_west_nan_rejectE = new TH3F("hQXvsQYvsCent_west_nan_rejectE","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
+	hQXvsQYvsCent_east_ZeroWeight = new TH3F("hQXvsQYvsCent_east_ZeroWeight","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
+	hQXvsQYvsCent_west_ZeroWeight = new TH3F("hQXvsQYvsCent_west_ZeroWeight","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 
 }
 //____________________________________________________________
