@@ -67,8 +67,13 @@ TF1* PileupLowlimit;
 //check the nan issue
 TH3F* hQXvsQYvsCent_east_nan;
 TH3F* hQXvsQYvsCent_west_nan;
+TH3F* hQXvsQYvsCent_east_nan_rejectE;
+TH3F* hQXvsQYvsCent_west_nan_rejectE;
+
 TH1D* hVz_nan;
 TH1D* hCentrality_nan;
+TH1D* hVz_nan_rejectE;
+TH1D* hCentrality_nan_rejectE;
 
 int main(int argc, char** argv)
 {
@@ -275,15 +280,6 @@ bool passEvent(miniDst const* const event)
 	// 	}
 	// }
 
-	if(isnan(mEtaPlusQx) || isnan(mEtaPlusQy) || isnan(mEtaMinusQx) || isnan(mEtaMinusQy)){
-		cout<<"nan issue"<<endl;
-		hCentrality_nan->Fill(mCentrality);
-		hVz_nan->Fill(vz);
-		hQXvsQYvsCent_east_nan->Fill(mEtaMinusQx,mEtaMinusQy,mCentrality);
-		hQXvsQYvsCent_west_nan->Fill(mEtaPlusQx,mEtaPlusQy,mCentrality);
-		return kFALSE;
-	}
-
 	//add the electron selection cut to reject the electrons
 	Int_t npTrks = event->mNTrks;
 	for(int j=0;j<npTrks;j++)
@@ -341,6 +337,22 @@ bool passEvent(miniDst const* const event)
 
 	}// end of electron rejection loop
 
+	if(isnan(mEtaPlusQx) || isnan(mEtaPlusQy) || isnan(mEtaMinusQx) || isnan(mEtaMinusQy)){
+		cout<<"nan issue"<<endl;
+		hCentrality_nan->Fill(mCentrality);
+		hVz_nan->Fill(vz);
+		hQXvsQYvsCent_east_nan->Fill(mEtaMinusQx,mEtaMinusQy,mCentrality);
+		hQXvsQYvsCent_west_nan->Fill(mEtaPlusQx,mEtaPlusQy,mCentrality);
+		return kFALSE;
+	}
+	if(isnan(mEtaPlusQx_rejectE) || isnan(mEtaPlusQy_rejectE) || isnan(mEtaMinusQx_rejectE) || isnan(mEtaMinusQy_rejectE)){
+		cout<<"nan issue rejectE"<<endl;
+		hCentrality_nan_rejectE->Fill(mCentrality);
+		hVz_nan_rejectE->Fill(vz);
+		hQXvsQYvsCent_east_nan_rejectE->Fill(mEtaMinusQx_rejectE,mEtaMinusQy_rejectE,mCentrality);
+		hQXvsQYvsCent_west_nan_rejectE->Fill(mEtaPlusQx_rejectE,mEtaPlusQy_rejectE,mCentrality);
+		return kFALSE;
+	}
 
 	mEtaPlusQx_rejectE = mEtaPlusQx_rejectE/mEtaPlusPtWeight_rejectE;
 	mEtaPlusQy_rejectE = mEtaPlusQy_rejectE/mEtaPlusPtWeight_rejectE;
@@ -490,6 +502,10 @@ void bookHistograms(char* outFile)
 	hCentrality_nan = new TH1D("hCentrality_nan","hCentrality_nan;Centrality",16,0,16);
 	hQXvsQYvsCent_east_nan = new TH3F("hQXvsQYvsCent_east_nan","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 	hQXvsQYvsCent_west_nan = new TH3F("hQXvsQYvsCent_west_nan","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
+	hVz_nan_rejectE = new TH1D("hVz_nan_rejectE","hVz_nan_rejectE;Vz",100,-50,50);
+	hCentrality_nan_rejectE = new TH1D("hCentrality_nan_rejectE","hCentrality_nan_rejectE;Centrality",16,0,16);
+	hQXvsQYvsCent_east_nan_rejectE = new TH3F("hQXvsQYvsCent_east_nan_rejectE","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
+	hQXvsQYvsCent_west_nan_rejectE = new TH3F("hQXvsQYvsCent_west_nan_rejectE","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 
 }
 //____________________________________________________________
