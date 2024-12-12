@@ -331,10 +331,6 @@ bool passEvent(miniDst const* const event)
 
 	if(isnan(mEtaPlusQx) || isnan(mEtaPlusQy) || isnan(mEtaMinusQx) || isnan(mEtaMinusQy)){
 		cout<<"nan issue"<<endl;
-		hCentrality_nan->Fill(mCentrality);
-		hVz_nan->Fill(vz);
-		hQXvsQYvsCent_east_nan->Fill(mEtaMinusQx,mEtaMinusQy,mCentrality);
-		hQXvsQYvsCent_west_nan->Fill(mEtaPlusQx,mEtaPlusQy,mCentrality);
 		return kFALSE;
 	}
 	if(isinf(mEtaPlusQx) || isinf(mEtaPlusQy) || isinf(mEtaMinusQx) || isinf(mEtaMinusQy)){
