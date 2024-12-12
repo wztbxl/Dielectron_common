@@ -520,7 +520,7 @@ void bookHistograms(char* outFile)
 	hQXvsQYvsCent_east_nan = new TH3F("hQXvsQYvsCent_east_nan","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 	hQXvsQYvsCent_west_nan = new TH3F("hQXvsQYvsCent_west_nan","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 	hVz_nan_rejectE = new TH1D("hVz_nan_rejectE","hVz_nan_rejectE;Vz",100,-50,50);
-	hCentrality_nan_rejectE = new TH1D("hCentrality_nan_rejectE","hCentrality_nan_rejectE;Centrality",20,-4,16;)
+	hCentrality_nan_rejectE = new TH1D("hCentrality_nan_rejectE","hCentrality_nan_rejectE;Centrality",20,-4,16);
 	hQXvsQYvsCent_east_nan_rejectE = new TH3F("hQXvsQYvsCent_east_nan_rejectE","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 	hQXvsQYvsCent_west_nan_rejectE = new TH3F("hQXvsQYvsCent_west_nan_rejectE","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 	hQXvsQYvsCent_east_ZeroWeight = new TH3F("hQXvsQYvsCent_east_ZeroWeight","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
