@@ -345,6 +345,7 @@ bool passEvent(miniDst const* const event)
 	}
 	if(mEtaPlusPtWeight == 0 || mEtaMinusPtWeight == 0 ){
 		cout<<"zero pt weight issue"<<endl;
+		cout << "mEtaPlusQx" << " " << mEtaPlusQx << " " << "mEtaPlusQy" << " " << mEtaPlusQy << endl;
 		cout << "mEtaPlusPtWeight" << " " << mEtaPlusPtWeight << " " << "mEtaMinusPtWeight" << " " << mEtaMinusPtWeight << endl;
 		return kFALSE;
 	}
