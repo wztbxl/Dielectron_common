@@ -237,7 +237,7 @@ bool passEvent(miniDst const* const event)
  	//  hnTofHitsvsRefMult->Fill(refMult,mnTOFMatch);
 	  if(mCentrality<0)                 return kFALSE;
 	// mCentrality = GetCentrality(RefMultCorr);
-	// if(mCentrality < 1 || mCentrality > 9 ) return kFALSE;
+	// if(mCentrality < 0 || mCentrality > 9 ) return kFALSE;
 
 	Float_t  mEtaPlusQx        = event->mEtaPlusQx;
 	Float_t  mEtaPlusQy        = event->mEtaPlusQy;
@@ -318,18 +318,55 @@ bool passEvent(miniDst const* const event)
 			{
 				mEtaMinusQx_rejectE -= pt*TMath::Cos(2*phi);
 				mEtaMinusQy_rejectE -= pt*TMath::Sin(2*phi);
+				mEtaMinusPtWeight_rejectE -= pt;
 
 			} else if (eta > 0)
 			{
 				mEtaPlusQx_rejectE -= pt*TMath::Cos(2*phi);
 				mEtaPlusQy_rejectE -= pt*TMath::Sin(2*phi);
+				mEtaPlusPtWeight_rejectE -= pt;
 			}
 
 	}
-	double mPlusQx_rejectE 	= mEtaPlusQx_rejectE;
-	double mPlusQy_rejectE 	= mEtaPlusQy_rejectE;
-	double mMinusQx_rejectE = mEtaMinusQx_rejectE;
-	double mMinusQy_rejectE = mEtaMinusQy_rejectE;
+
+	if(isnan(mEtaPlusQx) || isnan(mEtaPlusQy) || isnan(mEtaMinusQx) || isnan(mEtaMinusQy)){
+		cout<<"nan issue"<<endl;
+		hCentrality_nan->Fill(mCentrality);
+		hVz_nan->Fill(vz);
+		hQXvsQYvsCent_east_nan->Fill(mEtaMinusQx,mEtaMinusQy,mCentrality);
+		hQXvsQYvsCent_west_nan->Fill(mEtaPlusQx,mEtaPlusQy,mCentrality);
+		return kFALSE;
+	}
+	if(isinf(mEtaPlusQx) || isinf(mEtaPlusQy) || isinf(mEtaMinusQx) || isinf(mEtaMinusQy)){
+		cout<<"inf issue"<<endl;
+		// hCentrality_nan->Fill(mCentrality);
+		return kFALSE;
+	}
+	if(isnan(mEtaPlusQx_rejectE) || isnan(mEtaPlusQy_rejectE) || isnan(mEtaMinusQx_rejectE) || isnan(mEtaMinusQy_rejectE)){
+		cout<<"nan issue rejectE"<<endl;
+		// hCentrality_nan_rejectE->Fill(mCentrality);
+		return kFALSE;
+	}
+	if(mEtaPlusPtWeight == 0 || mEtaMinusPtWeight == 0 ){
+		cout<<"zero pt weight issue"<<endl;
+		cout << "mEtaPlusPtWeight" << " " << mEtaPlusPtWeight << " " << "mEtaMinusPtWeight" << " " << mEtaMinusPtWeight << endl;
+		return kFALSE;
+	}
+	if(mEtaPlusPtWeight_rejectE == 0 || mEtaMinusPtWeight_rejectE == 0 ){
+		cout<<"rejectE pt weight issue"<<endl;
+		cout << "mEtaPlusPtWeight" << " " << mEtaPlusPtWeight << " " << "mEtaMinusPtWeight" << " " << mEtaMinusPtWeight << endl;
+		cout << "mEtaPlusPtWeight_rejectE" << " " << mEtaPlusPtWeight_rejectE << " " << "mEtaMinusPtWeight_rejectE" << " " << mEtaMinusPtWeight_rejectE << endl;
+		return kFALSE;
+	}
+
+	double mPlusQx_rejectE 	= mEtaPlusQx_rejectE/mEtaPlusPtWeight_rejectE;
+	double mPlusQy_rejectE 	= mEtaPlusQy_rejectE/mEtaPlusPtWeight_rejectE;
+	double mMinusQx_rejectE = mEtaMinusQx_rejectE/mEtaMinusPtWeight_rejectE;
+	double mMinusQy_rejectE = mEtaMinusQy_rejectE/mEtaMinusPtWeight_rejectE;
+	mPlusQx = mEtaPlusQx/mEtaPlusPtWeight;
+	mPlusQy = mEtaPlusQy/mEtaPlusPtWeight;
+	mMinusQx = mEtaMinusQx/mEtaMinusPtWeight;
+	mMinusQy = mEtaMinusQy/mEtaMinusPtWeight;
 	Float_t Qx = mEtaPlusQx_rejectE + mEtaMinusQx_rejectE; 
 	Float_t Qy = mEtaPlusQy_rejectE + mEtaMinusQy_rejectE;
 	TVector2 Q(Qx,Qy);
