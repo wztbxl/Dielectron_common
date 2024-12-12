@@ -366,14 +366,14 @@ bool passEvent(miniDst const* const event)
 	}
 	if(mEtaPlusPtWeight == 0 || mEtaMinusPtWeight == 0 ){
 		cout<<"zero pt weight issue"<<endl;
-		cout << "mEtaPlusPtWeight" << " " << mEtaMinusPtWeight << " " << "mEtaMinusPtWeight" << " " << mEtaMinusPtWeight << endl;
+		cout << "mEtaPlusPtWeight" << " " << mEtaPlusPtWeight << " " << "mEtaMinusPtWeight" << " " << mEtaMinusPtWeight << endl;
 		hQXvsQYvsCent_east_ZeroWeight->Fill(mEtaMinusQx,mEtaMinusQy,mCentrality);
 		hQXvsQYvsCent_west_ZeroWeight->Fill(mEtaPlusQx,mEtaPlusQy,mCentrality);
 		return kFALSE;
 	}
 	if(mEtaPlusPtWeight_rejectE == 0 || mEtaMinusPtWeight_rejectE == 0 ){
 		cout<<"rejectE pt weight issue"<<endl;
-		cout << "mEtaPlusPtWeight_rejectE" << " " << mEtaMinusPtWeight_rejectE << " " << "mEtaMinusPtWeight_rejectE" << " " << mEtaMinusPtWeight_rejectE << endl;
+		cout << "mEtaPlusPtWeight_rejectE" << " " << mEtaPlusPtWeight_rejectE << " " << "mEtaMinusPtWeight_rejectE" << " " << mEtaMinusPtWeight_rejectE << endl;
 		hQXvsQYvsCent_east_ZeroWeight->Fill(mEtaMinusQx_rejectE,mEtaMinusQy_rejectE,mCentrality);
 		hQXvsQYvsCent_west_ZeroWeight->Fill(mEtaPlusQx_rejectE,mEtaPlusQy_rejectE,mCentrality);
 		return kFALSE;
