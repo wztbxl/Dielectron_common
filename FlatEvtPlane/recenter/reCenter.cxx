@@ -349,7 +349,7 @@ bool passEvent(miniDst const* const event)
 	}
 	if(isinf(mEtaPlusQx) || isinf(mEtaPlusQy) || isinf(mEtaMinusQx) || isinf(mEtaMinusQy)){
 		cout<<"inf issue"<<endl;
-		hCentrality_nan->Fill(mCentrality);
+		// hCentrality_nan->Fill(mCentrality);
 		hVz_nan->Fill(vz);
 		hQXvsQYvsCent_east_nan->Fill(mEtaMinusQx,mEtaMinusQy,mCentrality);
 		hQXvsQYvsCent_west_nan->Fill(mEtaPlusQx,mEtaPlusQy,mCentrality);
@@ -358,7 +358,7 @@ bool passEvent(miniDst const* const event)
 	}
 	if(isnan(mEtaPlusQx_rejectE) || isnan(mEtaPlusQy_rejectE) || isnan(mEtaMinusQx_rejectE) || isnan(mEtaMinusQy_rejectE)){
 		cout<<"nan issue rejectE"<<endl;
-		hCentrality_nan_rejectE->Fill(mCentrality);
+		// hCentrality_nan_rejectE->Fill(mCentrality);
 		hVz_nan_rejectE->Fill(vz);
 		hQXvsQYvsCent_east_nan_rejectE->Fill(mEtaMinusQx_rejectE,mEtaMinusQy_rejectE,mCentrality);
 		hQXvsQYvsCent_west_nan_rejectE->Fill(mEtaPlusQx_rejectE,mEtaPlusQy_rejectE,mCentrality);
@@ -367,6 +367,7 @@ bool passEvent(miniDst const* const event)
 	if(mEtaPlusPtWeight == 0 || mEtaMinusPtWeight == 0 ){
 		cout<<"zero pt weight issue"<<endl;
 		cout << "mEtaPlusPtWeight" << " " << mEtaPlusPtWeight << " " << "mEtaMinusPtWeight" << " " << mEtaMinusPtWeight << endl;
+		hCentrality_nan->Fill(mCentrality);
 		hQXvsQYvsCent_east_ZeroWeight->Fill(mEtaMinusQx,mEtaMinusQy,mCentrality);
 		hQXvsQYvsCent_west_ZeroWeight->Fill(mEtaPlusQx,mEtaPlusQy,mCentrality);
 		return kFALSE;
@@ -374,6 +375,7 @@ bool passEvent(miniDst const* const event)
 	if(mEtaPlusPtWeight_rejectE == 0 || mEtaMinusPtWeight_rejectE == 0 ){
 		cout<<"rejectE pt weight issue"<<endl;
 		cout << "mEtaPlusPtWeight_rejectE" << " " << mEtaPlusPtWeight_rejectE << " " << "mEtaMinusPtWeight_rejectE" << " " << mEtaMinusPtWeight_rejectE << endl;
+		hCentrality_nan_rejectE->Fill(mCentrality);
 		hQXvsQYvsCent_east_ZeroWeight->Fill(mEtaMinusQx_rejectE,mEtaMinusQy_rejectE,mCentrality);
 		hQXvsQYvsCent_west_ZeroWeight->Fill(mEtaPlusQx_rejectE,mEtaPlusQy_rejectE,mCentrality);
 		return kFALSE;
