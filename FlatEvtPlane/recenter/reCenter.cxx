@@ -347,6 +347,15 @@ bool passEvent(miniDst const* const event)
 		hQXvsQYvsCent_west_nan->Fill(mEtaPlusQx,mEtaPlusQy,mCentrality);
 		return kFALSE;
 	}
+	if(isinf(mEtaPlusQx) || isinf(mEtaPlusQy) || isinf(mEtaMinusQx) || isinf(mEtaMinusQy)){
+		cout<<"inf issue"<<endl;
+		hCentrality_nan->Fill(mCentrality);
+		hVz_nan->Fill(vz);
+		hQXvsQYvsCent_east_nan->Fill(mEtaMinusQx,mEtaMinusQy,mCentrality);
+		hQXvsQYvsCent_west_nan->Fill(mEtaPlusQx,mEtaPlusQy,mCentrality);
+		return kFALSE;
+		return kFALSE;
+	}
 	if(isnan(mEtaPlusQx_rejectE) || isnan(mEtaPlusQy_rejectE) || isnan(mEtaMinusQx_rejectE) || isnan(mEtaMinusQy_rejectE)){
 		cout<<"nan issue rejectE"<<endl;
 		hCentrality_nan_rejectE->Fill(mCentrality);
@@ -507,11 +516,11 @@ void bookHistograms(char* outFile)
   Pileuplimit = new TF1("Pileuplimit","0.7*x-10",0,1000);
 
 	hVz_nan = new TH1D("hVz_nan","hVz_nan;Vz",100,-50,50);
-	hCentrality_nan = new TH1D("hCentrality_nan","hCentrality_nan;Centrality",16,0,16);
+	hCentrality_nan = new TH1D("hCentrality_nan","hCentrality_nan;Centrality",20,-4,16);
 	hQXvsQYvsCent_east_nan = new TH3F("hQXvsQYvsCent_east_nan","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 	hQXvsQYvsCent_west_nan = new TH3F("hQXvsQYvsCent_west_nan","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 	hVz_nan_rejectE = new TH1D("hVz_nan_rejectE","hVz_nan_rejectE;Vz",100,-50,50);
-	hCentrality_nan_rejectE = new TH1D("hCentrality_nan_rejectE","hCentrality_nan_rejectE;Centrality",16,0,16);
+	hCentrality_nan_rejectE = new TH1D("hCentrality_nan_rejectE","hCentrality_nan_rejectE;Centrality",20,-4,16;
 	hQXvsQYvsCent_east_nan_rejectE = new TH3F("hQXvsQYvsCent_east_nan_rejectE","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 	hQXvsQYvsCent_west_nan_rejectE = new TH3F("hQXvsQYvsCent_west_nan_rejectE","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
 	hQXvsQYvsCent_east_ZeroWeight = new TH3F("hQXvsQYvsCent_east_ZeroWeight","; Qx; Qy",200,-10,10,200,-10,10,16,0,16);
