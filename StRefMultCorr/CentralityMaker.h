@@ -92,7 +92,7 @@ class CentralityMaker {
     StRefMultCorr* fgRefMultCorr_Run16_AuAu200_VpdMB5_P16ij  ;
     StRefMultCorr* fgRefMultCorr_Run16_AuAu200_VpdMBnoVtx_P16ij  ;
 
-    ClassDef(CentralityMaker, 0)
+    // ClassDef(CentralityMaker, 0)
 };
 #endif
 

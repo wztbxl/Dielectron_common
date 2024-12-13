@@ -563,7 +563,7 @@ bool Init()
 
 
 
-    fReCenter = TFile::Open("/star/u/wangzhen/data01/QA/DiElectron_Commom/FlatEvtPlane/reCenter/9p2/reCenter.root");
+    fReCenter = TFile::Open("/star/u/wangzhen/run20/Dielectron_Common/FlatEvtPlane/recenter/output_all/reCenter.root");
 	etapluszplusQx   = (TProfile2D *)fReCenter->Get("etapluszplusQx");
 	etapluszminusQx  = (TProfile2D *)fReCenter->Get("etapluszminusQx");
 	etaminuszplusQx  = (TProfile2D *)fReCenter->Get("etaminuszplusQx");
