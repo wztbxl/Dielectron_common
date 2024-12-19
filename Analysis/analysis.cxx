@@ -1910,6 +1910,7 @@ void GetPtPhiCentBin(TLorentzVector pair,TLorentzVector Positron, int _mCentrali
 	ptindex = _PtIndex;
 	yindex = _YIndex;
 	phiindex = _PhiIndex;
+	deltaPhiindex = _DeltaPhiIndex;
 }
 //____________________________________________________________
 Double_t phiVAngle(TLorentzVector e1, TLorentzVector e2, Int_t q1, Int_t q2)
