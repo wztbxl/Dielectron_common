@@ -38,8 +38,8 @@ fi
 
   
 ifile=0
-# for FILE in `cat datalist_$3`
-for FILE in `cat datalist_$1`
+for FILE in `cat datalist_$3`
+# for FILE in `cat datalist_$1`
 do
      echo $FILE
      cp ./run.csh script_$1/$2/$1_${ifile}.csh
