@@ -1251,7 +1251,7 @@ void makeMixPairs()
 
 						GetPtPhiCentBin(pair,current_ePlus[i], mCentrality, finalEventPlane, deltaphi,_PtIndex, _YIndex, _PhiIndex, _DeltaPhiIndex,_CentIndex, costhetastar, 0, 1);
 						if(_PtIndex > mPtBins-1 || _PtIndex<0 || _PhiIndex > mPhiBins-1 || _PhiIndex <0 || _DeltaPhiIndex > mDeltaPhiBins-1 || _DeltaPhiIndex < 0)continue; 
-						hMeevsPt_LSPos[cenBufferPointer][_DeltaPhiIndex]->Fill(pair.M(),pair.Pt(),reWeight);
+						hMeevsPt_Mix_LSPos[cenBufferPointer][_DeltaPhiIndex]->Fill(pair.M(),pair.Pt(),reWeight);
 						hMixLSPosM[cenBufferPointer][_PtIndex][_PhiIndex]->Fill(pair.M(), reWeight);
 						hMixLSPosYM[cenBufferPointer][_YIndex][_PhiIndex]->Fill(pair.M(), reWeight);
 						Polarization(1,1,current_ePlus[i],buffer_ePlus[cenBufferPointer][vzBufferPointer][eveBufferPointer][iBufferEvent][j]);
@@ -1305,7 +1305,7 @@ void makeMixPairs()
 
 						GetPtPhiCentBin(pair,current_eMinus[i], mCentrality, finalEventPlane, deltaphi,_PtIndex, _YIndex, _PhiIndex,_DeltaPhiIndex, _CentIndex, costhetastar, 0, 1);
 						if(_PtIndex > mPtBins-1 || _PtIndex<0 || _PhiIndex > mPhiBins-1 || _PhiIndex <0 || _DeltaPhiIndex > mDeltaPhiBins-1 || _DeltaPhiIndex < 0)continue;
-						hMeevsPt_LSNeg[cenBufferPointer][_DeltaPhiIndex]->Fill(pair.M(),pair.Pt(),reWeight); 
+						hMeevsPt_Mix_LSNeg[cenBufferPointer][_DeltaPhiIndex]->Fill(pair.M(),pair.Pt(),reWeight); 
 						hMixLSNegM[cenBufferPointer][_PtIndex][_PhiIndex]->Fill(pair.M(), reWeight);
 						hMixLSMinusYM[cenBufferPointer][_YIndex][_PhiIndex]->Fill(pair.M(), reWeight);
 						Polarization(1,1,current_eMinus[i],buffer_eMinus[cenBufferPointer][vzBufferPointer][eveBufferPointer][iBufferEvent][j]);
