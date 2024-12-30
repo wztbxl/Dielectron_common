@@ -1080,7 +1080,7 @@ void makeRealPairs()
 					hCosPsi2_LSNeg_pT[cenBufferPointer]->Fill(pair.Pt(),cos(2*(deltaphi)));
 
 					GetPtPhiCentBin(pair, current_eMinus[i], mCentrality, finalEventPlane, deltaphi, _PtIndex, _YIndex, _PhiIndex, _DeltaPhiIndex, _CentIndex,costhetastar, 0, 1);//
-					if(_PtIndex > mPtBins-1 || _PtIndex<0 || _PhiIndex > mPhiBins-1 || _PhiIndex <0 || _DeltaPhiIndex < mDeltaPhiBins-1 || _DeltaPhiIndex < 0 )continue; 
+					if(_PtIndex > mPtBins-1 || _PtIndex<0 || _PhiIndex > mPhiBins-1 || _PhiIndex <0 || _DeltaPhiIndex > mDeltaPhiBins-1 || _DeltaPhiIndex < 0 )continue; 
 					hMeevsPt_LSNeg[cenBufferPointer][_DeltaPhiIndex]->Fill(pair.M(),pair.Pt(),reWeight);
 					hLSMinusM[cenBufferPointer][_PtIndex][_PhiIndex]->Fill(pair.M(), reWeight);
 					hLSMinusYM[cenBufferPointer][_YIndex][_PhiIndex]->Fill(pair.M(), reWeight);
