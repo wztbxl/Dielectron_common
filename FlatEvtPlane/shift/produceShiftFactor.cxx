@@ -15,6 +15,8 @@ map<Int_t,Int_t> mBadRunId_001;
 map<Int_t,Int_t> mBadRunId_021;
 TF1* Pileuplimit;
 
+vector <Int_t> TriggerID;
+
 TString Energy;
 
 bool Init();
@@ -148,10 +150,12 @@ bool passEvent(miniDst const* const event)
 	Bool_t RefMVzCorFlag = kFALSE;
 	Bool_t is001Trigger = kFALSE;
 	Bool_t is021Trigger = kFALSE;
-	for(Int_t i=0; i<event->mNTrigs; i++){
-		if(event->mTrigId[i] == 780010) validTrig = kTRUE, is001Trigger = kTRUE, RefMVzCorFlag= kTRUE;
-		//if(event->mTrigId[i] == 580011) validTrig = kTRUE;
-		if(event->mTrigId[i] == 780020) validTrig = kTRUE, is021Trigger = kTRUE;
+	for(int i=0; i< event->mNTrigs; i++){
+		int trigId = event->mTrigId[i];
+		auto it = std::find(TriggerID.begin(), TriggerID.end(), trigId);
+		if (it != TriggerID.end()) {
+    	    validTrig = kTRUE;
+    	} 
 	}
 	if(!validTrig){
 		return kFALSE;
@@ -561,9 +565,30 @@ bool Init()
 	for(map<Int_t,Int_t>::iterator iter=mBadRunId_001.begin();iter!=mBadRunId_001.end();iter++)
 		cout<<iter->second<<" \t"<<iter->first<<endl;
 
+	cout << "loading the trigger ID" << endl;
+	ifstream in_triggerFile;
+	in_triggerFile.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/triggerID/%s_triggerID.dat",Energy.Data()));
+	TriggerID.clear();
+	if(in_triggerFile.is_open())
+	{
+		cout << "reading the " << Energy << " trigger IDs" << endl;
+		int in_triggerID;
+		while (in_triggerFile>>in_triggerID)
+		{
+			TriggerID.push_back(in_triggerID);
+		}
+		for(auto f:TriggerID)
+		{
+			cout << "Trigger ID : " << f << endl;
+		}
+		cout << "loading trigger ID [OK]" << endl;
+	} else{
+		cout<<"Failed to load the Trigger ID !!!"<<endl;
+		return kFALSE;
+	}
+	in_triggerFile.close();
 
-
-    fReCenter = TFile::Open("/star/u/wangzhen/run20/Dielectron_Common/FlatEvtPlane/recenter/output_all/reCenter.root");
+    fReCenter = TFile::Open(Form("/star/u/wangzhen/run20/Dielectron_Common/FlatEvtPlane/recenter/output_all/%s/reCenter.root",Energy.Data()));
 	etapluszplusQx   = (TProfile2D *)fReCenter->Get("etapluszplusQx");
 	etapluszminusQx  = (TProfile2D *)fReCenter->Get("etapluszminusQx");
 	etaminuszplusQx  = (TProfile2D *)fReCenter->Get("etaminuszplusQx");
