@@ -2745,7 +2745,8 @@ Bool_t Init()
 		cout<<iter->second<<" \t"<<iter->first<<endl;
 
 
-	TFile *fReCenter = TFile::Open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/reCenter.root",Energy.Data()));
+	TFile *fReCenter = TFile::Open(Form("/star/u/wangzhen/run20/Dielectron_Common/FlatEvtPlane/recenter/output_all/%s/reCenter.root",Energy.Data()));
+	// TFile *fReCenter = TFile::Open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/reCenter.root",Energy.Data()));
 	if(fReCenter->IsOpen()){
 		cout<<"read in re-center root file ...";
 		etapluszplusQx   = (TProfile2D *)fReCenter->Get("etapluszplusQx");
@@ -2762,7 +2763,8 @@ Bool_t Init()
 		etaminusQy_cent  = (TProfile*)fReCenter->Get("etaminusQy_cent");
 	}
 
-	TFile *fShift = TFile::Open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/shift.histo.root",Energy.Data()));
+	TFile *fShift = TFile::Open(Form("/star/u/wangzhen/run20/Dielectron_Common/FlatEvtPlane/shift/output_all/%s/shift.histo.root",Energy.Data()));
+	// TFile *fShift = TFile::Open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s/FlatEP/shift.histo.root",Energy.Data()));
 	if(fShift->IsOpen()){
 		cout<<"read in shiftfactor root file ...";
 		for(int i=0;i<mArrayLength;i++){
