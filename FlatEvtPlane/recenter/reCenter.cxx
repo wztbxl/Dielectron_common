@@ -521,7 +521,7 @@ bool Init()
 
 	cout << "loading the trigger ID" << endl;
 	ifstream in_triggerFile;
-	in_triggerFile.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/%s_triggerID.dat",Energy.Data()));
+	in_triggerFile.open(Form("/star/u/wangzhen/run20/Dielectron_Common/common/triggerID/%s_triggerID.dat",Energy.Data()));
 	TriggerID.clear();
 	if(in_triggerFile.is_open())
 	{
