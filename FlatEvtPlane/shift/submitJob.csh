@@ -25,7 +25,8 @@ if [ ! -d  log_all ]; then
 	 ln -s $dir/log_all ./
 fi
 
-rm -rf output_all/*.histo.root
+mkdir -p $dir/output_all/$1
+rm -rf output_all/$1/*.histo.root
 rm -rf script_all/*
 rm -rf log_all/*
 
@@ -50,7 +51,7 @@ for FILE in `cat datalist_$1`
 do
      echo $FILE
      echo "#!/bin/csh">>script_all/all_$ifile.csh
-     echo "./produceShiftFactor $FILE output_all/$ifile $1">>script_all/all_$ifile.csh
+     echo "./produceShiftFactor $FILE output_all/$1/$ifile $1">>script_all/all_$ifile.csh
      chmod 755 script_all/all_$ifile.csh
 
      echo "Executable       = script_all/all_$ifile.csh">>runAll_all.job
